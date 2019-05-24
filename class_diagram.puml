@@ -28,6 +28,12 @@ package bicliques.graphs {
     {method}{abstract} + getVertexCount() : int
     {method}{abstract} + getEdges() : Edge[]
     {method}{abstract} + getEdgeCount() : int
+
+/'
+I don't think these two methods should be in the general graph interface.
+The maximum biclique algorithm class should be the one owning the graph
+class and not the other way around. - MI
+'/
     {method}{abstract} + setMBA(MaximalBicliqueAlgorithm)
     {method}{abstract} + maxBicliques() : Bicliques[]
   }
@@ -90,6 +96,11 @@ package bicliques.algorithms {
     {field} - right : Vertex[]
 /'
 Why should we need access to a graph from a biclique? -RK
+
+Because the bicliques are defined by the graph, more or less.
+To me it makes sense in term of program logic.
+Put it back in if you agree. - MI
+
 '    {field} - graph : Graph
 '/
 	{method} + Biclique(Vertex[], Vertex[])
