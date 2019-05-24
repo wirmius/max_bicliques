@@ -119,8 +119,8 @@ Why should we need access to a graph from a biclique? -RK
     
 /'
 Changed method adjunction to consensus (I think you meant that didn't you?).
-For bipartite graphs only the half of the consensuses are needed,
-so there is an other one. -RK
+For bipartite graphs only the half of the consensuses is needed,
+so there is an additional method. -RK
 '/
     {method} + consensus(Biclique) : Biclique[]
     {method} + bipartiteConsensus(Biclique) : Biclique[]
