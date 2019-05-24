@@ -1,0 +1,35 @@
+@startuml
+
+' The graph section
+package bicliques.graphs {
+interface Graph {
+{method}+ getNodes() : Node[]
+{method}+ getNodeCount() : Integer
+{method}+ getEdges() : Edge[]
+{method}+ getEdgeCount() : Integer
+}
+interface Node {
+{method}+ getNeighbours() : Node[]
+{method}+ getEdges() : Edge[]
+}
+interface Edge {
+{method}+ getStart() : Node
+{method}+ getEnd() : Node
+}
+
+Node --* Graph
+Edge --* Graph
+}
+
+
+' The UI section
+package bicliques.ui {
+}
+
+' The algorithms section
+package bicliques.algorithms {
+}
+
+
+
+@enduml
