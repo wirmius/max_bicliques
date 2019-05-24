@@ -34,8 +34,8 @@ package bicliques.graphs {
   }
   
   interface Edge {
-    {method} + getStart() : Node
-    {method} + getEnd() : Node
+    {method} + getStart() : Vertex
+    {method} + getEnd() : Vertex
   }
 
   Vertex -* Graph
