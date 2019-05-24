@@ -11,69 +11,79 @@ a max biclique algorithm and one of the following parts:
 - Tests
 - UI and input
 - Graphs and graph parsing.
-'/
 -MI
+'/
+
 @startuml
 
 package bicliques {
 
 ' The graph section
 package bicliques.graphs {
-interface Graph {
-{method}+ getNodes() : Node[]
-{method}+ getNodeCount() : Integer
-{method}+ getEdges() : Edge[]
-{method}+ getEdgeCount() : Integer
-}
-interface Node {
-{method}+ getNeighbours() : Node[]
-{method}+ getEdges() : Edge[]
-}
-interface Edge {
-{method}+ getStart() : Node
-{method}+ getEnd() : Node
-}
 
-Node -* Graph
-Edge -* Graph
+  interface Graph {
+    {method}+ getNodes() : Node[]
+    {method}+ getNodeCount() : Integer
+    {method}+ getEdges() : Edge[]
+    {method}+ getEdgeCount() : Integer
+  }
+
+  interface Node {
+    {method}+ getNeighbours() : Node[]
+    {method}+ getEdges() : Edge[]
+  }
+  
+  interface Edge {
+    {method}+ getStart() : Node
+    {method}+ getEnd() : Node
+  }
+
+  Node -* Graph
+  Edge -* Graph
+  
 }
 
 
 ' The UI section
 package bicliques.ui {
+
 /'
 For the UI part I say we need to come up with something, that can read in
 the text files (I don't want to be copying and pasting stuff in the windows
 every time I use it). - MI.
 '/
+
 }
 
 ' The algorithms section
 package bicliques.algorithms {
-class Biclique {
-{field} - left : Node[]
-{field} - right : Node[]
-{field} - graph : Graph
-{method} + getLeft() : Node[]
-{method} + getRight() : Node[]
-{method} + getGraph() : Graph[] --o Graph
-{method} + absorbs(Biclique) : bool
-{method} + adjunction(Biclique) : Biclique[]
-}
 
-Biclique --* Graph
+  class Biclique {
+    {field} - left : Node[]
+    {field} - right : Node[]
+    {field} - graph : Graph
+    {method} + getLeft() : Node[]
+    {method} + getRight() : Node[]
+    {method} + getGraph() : Graph[] --o Graph
+    {method} + absorbs(Biclique) : bool
+    {method} + adjunction(Biclique) : Biclique[]
+  }
 
-interface BicliqueFindingAlgorithm {
-{method} + findMaxBicliques() : Biclique[]
-}
+  Biclique --* Graph
+
+  interface BicliqueFindingAlgorithm {
+    {method} + findMaxBicliques() : Biclique[]
+  }
+
 }
 
 package bicliques.test {
+
 /' The testing that we will need. I say we use junit 4 or 5
 to make it more streamlined. -MI '/
-}
 
 }
 
+}
 
 @enduml
