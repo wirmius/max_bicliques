@@ -16,6 +16,7 @@ I agree with this partitioning.
 I would like to work on the UI (since I have already done some work for that). -RK
 '/
 
+
 @startuml
 
 package bicliques {
@@ -38,6 +39,7 @@ I do not agree (but maybe I do not understand the whole thing ;-).
 I would implement the strategy design pattern, but one can do that in one line...
 Improvement: Now in every call of maxBicliques one can choose
 the proper algorithm directly. -RK
+
 '/
     {method}{abstract} + maxBicliques(MaximalBicliqueAlgorithm) : Bicliques[]
   }
@@ -86,6 +88,9 @@ So do I. In my suggested screenshot of a possible UI the menu would provide
 - Algorithm: choose between several implemented ones
 - Help: Description of algorithms and the common "About".
 -RK
+
+I think that we need define separate Vertexs for right and left Neighbours. -HS
+
 '/
 
   class MaxBicliqueGUI {
