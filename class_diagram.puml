@@ -22,23 +22,23 @@ package bicliques {
 package bicliques.graphs {
 
   interface Graph {
-    {method}+ getNodes() : Node[]
-    {method}+ getNodeCount() : Integer
-    {method}+ getEdges() : Edge[]
-    {method}+ getEdgeCount() : Integer
+    {method} + getVertices() : Vertex[]
+    {method} + getVertexCount() : Integer
+    {method} + getEdges() : Edge[]
+    {method} + getEdgeCount() : Integer
   }
 
-  interface Node {
-    {method}+ getNeighbours() : Node[]
-    {method}+ getEdges() : Edge[]
+  interface Vertex {
+    {method} + getNeighbours() : Vertex[]
+    {method} + getEdges() : Edge[]
   }
   
   interface Edge {
-    {method}+ getStart() : Node
-    {method}+ getEnd() : Node
+    {method} + getStart() : Node
+    {method} + getEnd() : Node
   }
 
-  Node -* Graph
+  Vertex -* Graph
   Edge -* Graph
   
 }
@@ -59,13 +59,13 @@ every time I use it). - MI.
 package bicliques.algorithms {
 
   class Biclique {
-    {field} - left : Node[]
-    {field} - right : Node[]
+    {field} - left : Vertex[]
+    {field} - right : Vertex[]
     {field} - graph : Graph
-    {method} + getLeft() : Node[]
-    {method} + getRight() : Node[]
+    {method} + getLeft() : Vertex[]
+    {method} + getRight() : Vertex[]
     {method} + getGraph() : Graph[] --o Graph
-    {method} + absorbs(Biclique) : bool
+    {method} + absorbs(Biclique) : boolean
     {method} + adjunction(Biclique) : Biclique[]
   }
 
@@ -79,8 +79,10 @@ package bicliques.algorithms {
 
 package bicliques.test {
 
-/' The testing that we will need. I say we use junit 4 or 5
-to make it more streamlined. -MI '/
+/'
+The testing that we will need. I say we use junit 4 or 5
+to make it more streamlined. -MI
+'/
 
 }
 
