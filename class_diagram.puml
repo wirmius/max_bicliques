@@ -51,7 +51,7 @@ package bicliques.graphs {
     {field} - right : Vertex[]
     {field} - edges : Edge[]
     {field} - mba : MaximalBicliquesAlgorithm
-    {method} + BipartiteGraph(Vertext[], Vertex[], Edge[])
+    {method} + BipartiteGraph(Vertex[], Vertex[], Edge[])
     {method} + getLeft() : Vertex[]
     {method} + getRight() : Vertex[]
   }
@@ -100,7 +100,8 @@ Why should we need access to a graph from a biclique? -RK
 '    {method} + getGraph() : Graph[] --o Graph
 '/
     {method} + absorbs(Biclique) : boolean
-    {method} + adjunction(Biclique) : Biclique[]
+    {method} + consensus(Biclique) : Biclique[]
+    {method} + bipartiteConsensus(Biclique) : Biclique[]
   }
 
   Biclique --* Graph
@@ -109,6 +110,14 @@ Why should we need access to a graph from a biclique? -RK
     {method}{abstract} + findMaxBicliques(Graph) : Biclique[]
   }
 
+  /'
+  MICA algorithm improved for bipartite graphs. -RK
+  '/
+  class MICAB {
+  }
+  
+  MaximalBicliquesAlgorithm <|.. MICAB
+  
 }
 
 package bicliques.test {
