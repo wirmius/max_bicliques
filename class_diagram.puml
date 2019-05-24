@@ -29,12 +29,13 @@ package bicliques.graphs {
     {method}{abstract} + getEdges() : Edge[]
     {method}{abstract} + getEdgeCount() : int
     {method}{abstract} + setMBA(MaximalBicliqueAlgorithm)
-    {method}{abstract} + maxBicliques(): Bicliques[]
+    {method}{abstract} + maxBicliques() : Bicliques[]
   }
 
   interface Vertex {
     {method}{abstract} + getNeighbours() : Vertex[]
     {method}{abstract} + getEdges() : Edge[]
+    {method}{abstract} + getStar() : Biclique
   }
   
   interface Edge {
@@ -49,6 +50,7 @@ package bicliques.graphs {
     {field} - left : Vertex[]
     {field} - right : Vertex[]
     {field} - edges : Edge[]
+    {field} - mba : MaximalBicliquesAlgorithm
     {method} + BipartiteGraph(Vertext[], Vertex[], Edge[])
     {method} + getLeft() : Vertex[]
     {method} + getRight() : Vertex[]
