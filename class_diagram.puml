@@ -12,6 +12,8 @@ a max biclique algorithm and one of the following parts:
 - UI and input
 - Graphs and graph parsing.
 -MI
+I agree with this partitioning.
+I would like to work on the UI (since I have already done some work for that). -RK
 '/
 
 @startuml
@@ -22,24 +24,37 @@ package bicliques {
 package bicliques.graphs {
 
   interface Graph {
-    {method} + getVertices() : Vertex[]
-    {method} + getVertexCount() : Integer
-    {method} + getEdges() : Edge[]
-    {method} + getEdgeCount() : Integer
+    {method}{abstract} + getVertices() : Vertex[]
+    {method}{abstract} + getVertexCount() : int
+    {method}{abstract} + getEdges() : Edge[]
+    {method}{abstract} + getEdgeCount() : int
+    {method}{abstract} + setMBA(MaximalBicliqueAlgorithm)
+    {method}{abstract} + maxBicliques(): Bicliques[]
   }
 
   interface Vertex {
-    {method} + getNeighbours() : Vertex[]
-    {method} + getEdges() : Edge[]
+    {method}{abstract} + getNeighbours() : Vertex[]
+    {method}{abstract} + getEdges() : Edge[]
   }
   
   interface Edge {
-    {method} + getStart() : Vertex
-    {method} + getEnd() : Vertex
+    {method}{abstract} + getStart() : Vertex
+    {method}{abstract} + getEnd() : Vertex
   }
 
   Vertex -* Graph
   Edge -* Graph
+  
+  class BipartiteGraph {
+    {field} - left : Vertex[]
+    {field} - right : Vertex[]
+    {field} - edges : Edge[]
+    {method} + BipartiteGraph(Vertext[], Vertex[], Edge[])
+    {method} + getLeft() : Vertex[]
+    {method} + getRight() : Vertex[]
+  }
+  
+  Graph <|.. BipartiteGraph
   
 }
 
@@ -51,8 +66,18 @@ package bicliques.ui {
 For the UI part I say we need to come up with something, that can read in
 the text files (I don't want to be copying and pasting stuff in the windows
 every time I use it). - MI.
+
+So do I. In my suggested screenshot of a possible UI the menu would provide
+- Input: load (from file) or from input in window
+- Output: save (to file)
+- Algorithm: choose between several implemented ones
+- Help: Description of algorithms and the common "About".
+-RK
 '/
 
+  class MaxBicliqueGUI {
+    {method}{static} + main(String[]): void
+  }
 }
 
 ' The algorithms section
@@ -61,18 +86,25 @@ package bicliques.algorithms {
   class Biclique {
     {field} - left : Vertex[]
     {field} - right : Vertex[]
-    {field} - graph : Graph
+/'
+Why should we need access to a graph from a biclique? -RK
+'    {field} - graph : Graph
+'/
+	{method} + Biclique(Vertex[], Vertex[])
     {method} + getLeft() : Vertex[]
     {method} + getRight() : Vertex[]
-    {method} + getGraph() : Graph[] --o Graph
+/'
+Why should we need access to a graph from a biclique? -RK
+'    {method} + getGraph() : Graph[] --o Graph
+'/
     {method} + absorbs(Biclique) : boolean
     {method} + adjunction(Biclique) : Biclique[]
   }
 
   Biclique --* Graph
 
-  interface BicliqueFindingAlgorithm {
-    {method} + findMaxBicliques() : Biclique[]
+  interface MaximalBicliquesAlgorithm {
+    {method}{abstract} + findMaxBicliques(Graph) : Biclique[]
   }
 
 }
@@ -82,6 +114,7 @@ package bicliques.test {
 /'
 The testing that we will need. I say we use junit 4 or 5
 to make it more streamlined. -MI
+I agree. -RK
 '/
 
 }
