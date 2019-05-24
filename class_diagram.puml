@@ -63,6 +63,8 @@ the proper algorithm directly. -RK
     {method} + BipartiteGraph(Vertex[], Vertex[], Edge[])
     {method} + getLeft() : Vertex[]
     {method} + getRight() : Vertex[]
+    {method} + getLeftCount(): int
+    {method} + getRightCount(): int
   }
   
   Graph <|.. BipartiteGraph
