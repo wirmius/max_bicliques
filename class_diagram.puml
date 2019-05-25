@@ -136,6 +136,11 @@ I'm not convinced. Can you explain in detail? -RK
 Why should we need access to a graph from a biclique? -RK
 '    {method} + getGraph() : Graph[] --o Graph
 '/
+	/'
+	 ' Starting from bicliques B1 = (X1, Y1) and B2 = (X2, Y2)
+	 ' B1.absorbs(B2) <=> X2 \subset X1 and Y2 \subset Y1
+	 -RK
+	'/
     {method} + absorbs(Biclique) : boolean    
 /'
 Changed method adjunction to consensus (I think you meant that didn't you?).
