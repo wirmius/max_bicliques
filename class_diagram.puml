@@ -124,6 +124,20 @@ Put it back in if you agree. - MI
 
 I'm not convinced. Can you explain in detail? -RK
 
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Because it makes sense logically. We can't just have a Biclique
+without having a graph first. In the beginning we have just a
+simple graph. Later on we compute bicliques/whatever. It's about
+a straightforward logical separation of the things. So we shouldn't
+have redundant elements within the structure of the program as we
+have currently (because RN we basically have Biclique and
+BipartiteGraph classes serve the exact same purpose which does not
+fulfill encapsulation criteria at all).
+These matters are key points. If we get it wrong now we will have
+a lot of fun untangling the clusterfuck that would come out of it
+later. -MI
+
 '    {field} - graph : Graph
 '/
 	/' constructors for different cases -RK'/
