@@ -138,6 +138,10 @@ These matters are key points. If we get it wrong now we will have
 a lot of fun untangling the clusterfuck that would come out of it
 later. -MI
 
+For me it would make more sense if Biclique is displaced:
+1. Since Biclique is a graph it should be in the graph package.
+2. Since it is a (complete) bipartite graph it should be derived from that.
+-RK
 '    {field} - graph : Graph
 '/
 	/' constructors for different cases -RK'/
