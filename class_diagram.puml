@@ -16,6 +16,9 @@ I agree with this partitioning.
 I would like to work on the UI (since I have already done some work for that). -RK
 '/
 
+/'
+ Is it not better that at the first define the needed classes and then define one file for each one and so on? -HS
+'/
 
 @startuml
 
