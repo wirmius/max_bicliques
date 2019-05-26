@@ -16,6 +16,18 @@ I agree with this partitioning.
 I would like to work on the UI (since I have already done some work for that). -RK
 '/
 
+/'
+ Is it not better that at the first define the needed classes and then define one file for each one and so on? -HS
+'/
+
+/'
+I'm not sure if I understand you, Hadi. Of course we need a proper class diagram first.
+If you aim at my branch when talking about new files, it's just for visualization of
+the proposed structure since I did not want to mess up this file with my ideas.
+If you have installed the PlantUML plugin in eclipse you'll have a nice view of this file
+we are developing together. So if you switch to the branch new_structure you'll see
+the proposed structure immediately in a nice way. -RK
+'/
 
 @startuml
 
