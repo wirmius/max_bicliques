@@ -51,7 +51,7 @@ I would implement the strategy design pattern, but one can do that in one line..
 Improvement: Now in every call of maxBicliques one can choose
 the proper algorithm directly. -RK
 '/
-    {method}{abstract} + maxBicliques(MaximalBicliqueAlgorithm) : Bicliques[]
+    {method}{abstract} + maxBicliques(MaximalBicliquesAlgorithm) : Biclique[]
   }
 
 /'
