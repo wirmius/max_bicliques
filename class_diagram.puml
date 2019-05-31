@@ -3,30 +3,8 @@ This is our model for the class diagram. Whenever you have any remarks
 to make regarding one part of the program or another, just make a
 comment windows in here like this.
 Sign it with your initials as well. -MI
-'/
 
-/'
-We can have a nice separation of labor: each one of us gets to implement
-a max biclique algorithm and one of the following parts:
-- Tests
-- UI and input
-- Graphs and graph parsing.
--MI
-I agree with this partitioning.
-I would like to work on the UI (since I have already done some work for that). -RK
-'/
-
-/'
- Is it not better that at the first define the needed classes and then define one file for each one and so on? -HS
-'/
-
-/'
-I'm not sure if I understand you, Hadi. Of course we need a proper class diagram first.
-If you aim at my branch when talking about new files, it's just for visualization of
-the proposed structure since I did not want to mess up this file with my ideas.
-If you have installed the PlantUML plugin in eclipse you'll have a nice view of this file
-we are developing together. So if you switch to the branch new_structure you'll see
-the proposed structure immediately in a nice way. -RK
+I cleared the logs of discussion to reduce clutter. Don't leave long messages in the diagram unless essential. -MI
 '/
 
 @startuml
@@ -36,23 +14,18 @@ package bicliques {
 ' The graph section
 package bicliques.graphs {
 
-  interface Graph {
-    {method}{abstract} + getVertices() : Vertex[]
-    {method}{abstract} + getVertexCount() : int
-    {method}{abstract} + getEdges() : Edge[]
-    {method}{abstract} + getEdgeCount() : int
-/'
-I don't think these two methods should be in the general graph interface.
-The maximum biclique algorithm class should be the one owning the graph
-class and not the other way around. - MI
 
-I do not agree (but maybe I do not understand the whole thing ;-).
-I would implement the strategy design pattern, but one can do that in one line...
-Improvement: Now in every call of maxBicliques one can choose
-the proper algorithm directly. -RK
-'/
-'    {method}{abstract} + maxBicliques(MaximalBicliquesAlgorithm) : Biclique[]
-  }
+  'Let's stick to naming the vertexes. We don't care about the edges that much.
+  ' We just need to be able to show in the end what goes where.
+  interface Graph<V> {
+    {method}{abstract} + getVertices() : Map<V, Vertex<V>>
+    {method}{abstract} + getVertexCount() : int
+    {method}{abstract} + getEdges() : Set<Edge>
+    {method}{abstract} + getEdgeCount() : int
+    {method}{abstract} + addVertex(V) : void
+    {method}{abstract} + addEdge(Vertex<V>, Vertex<V>): void
+    }
+
 
 /'
 I think that we need define separate Vertexs for right and left Neighbours. -HS
@@ -60,7 +33,8 @@ I think that we need define separate Vertexs for right and left Neighbours. -HS
 Hadi, first I have displaced your comment for better fitting.
 Second, I don't think it is necessary to distinguish between left and right vertices. -RK
 '/
-  interface Vertex {
+  interface Vertex<V> {
+    {method}{abstract} + getIdentifier() : V
     {method}{abstract} + getNeighbours() : Set<Vertex>
     {method}{abstract} + getEdges() : Set<Edge>
   }
@@ -72,8 +46,9 @@ Second, I don't think it is necessary to distinguish between left and right vert
 
   Vertex -* Graph
   Edge -* Graph
-  
-  class BipartiteGraph {
+
+/' A graph can have multiple bicliques. Therefore we should not incorporate biclique structure into the Graph. '/
+/'  class BipartiteGraph {
     {field} - left : Vertex[]
     {field} - right : Vertex[]
     {field} - edges : Edge[]
@@ -85,7 +60,7 @@ Second, I don't think it is necessary to distinguish between left and right vert
   }
   
   Graph <|.. BipartiteGraph
-  
+ '/
 }
 
 
@@ -114,87 +89,25 @@ So do I. In my suggested screenshot of a possible UI the menu would provide
 package bicliques.algorithms {
 
   class Biclique {
-    {field} - left : Vertex[]
-    {field} - right : Vertex[]
-/'
-Why should we need access to a graph from a biclique? -RK
-
-Because the bicliques are defined by the graph, more or less.
-To me it makes sense in term of program logic.
-Put it back in if you agree. - MI
-
-I'm not convinced. Can you explain in detail? -RK
-
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-Because it makes sense logically. We can't just have a Biclique
-without having a graph first. In the beginning we have just a
-simple graph. Later on we compute bicliques/whatever. It's about
-a straightforward logical separation of the things. So we shouldn't
-have redundant elements within the structure of the program as we
-have currently (because RN we basically have Biclique and
-BipartiteGraph classes serve the exact same purpose which does not
-fulfill encapsulation criteria at all).
-These matters are key points. If we get it wrong now we will have
-a lot of fun untangling the clusterfuck that would come out of it
-later. -MI
-
-For me it would make more sense if Biclique is displaced:
-1. Since Biclique is a graph it should be in the graph package.
-2. Since it is a (complete) bipartite graph it should be derived from that.
--RK
-
-!!!URGENT!!!
-A couple of days ago I branched to new_structure to visualize my suggestions
-but I never got feedback (except from Hadi). Please take a look and comment in *master* or in redmine (as Hadi already did).
--RK
-
-'    {field} - graph : Graph
-'/
+    {field} - left : Set<Vertex>
+    {field} - right : Set<Vertex>
+    {field} - graph : Graph
 	/' constructors for different cases -RK'/
-	{method} + Biclique(Vertex[], Vertex[])
-	{method} + Biclique(Vertex, Vertex[])
-	{method} + Biclique(Vertex[], Vertex)
-    {method} + getLeft() : Vertex[]
-    {method} + getRight() : Vertex[]
-/'
-Why should we need access to a graph from a biclique? -RK
-'    {method} + getGraph() : Graph[] --o Graph
-'/
-	/'
-	 ' Starting from bicliques B1 = (X1, Y1) and B2 = (X2, Y2)
-	 ' B1.absorbs(B2) <=> X2 \subset X1 and Y2 \subset Y1
-	 -RK
-	'/
-    {method} + absorbs(Biclique) : boolean    
-/'
-Changed method adjunction to consensus (I think you meant that didn't you?).
-For bipartite graphs only the half of the consensuses is needed,
-so there is an additional method. -RK
-'/
-	/'
-	 ' Starting from bicliques B1 = (X1, Y1) and B2 = (X2, Y2)
-	 ' method should return the following bicliques (if intersection is not empty):
-	 ' - (X1 intersect X2, Y1 union Y2)
-	 ' - (X1 union X2, Y1 intersect Y2)
-	 -RK
-	'/
-    {method} + bipartiteConsensus(Biclique) : Biclique[]
-	/'
-	 ' Starting from bicliques B1 = (X1, Y1) and B2 = (X2, Y2)
-	 ' method should return the following bicliques (if intersection is not empty):
-	 ' - all the bicliques generated by bipartiteConsensus
-	 ' - (X1 intersect Y2, X2 union Y1)
-	 ' - (X1 union Y2, X2 intersect Y1)
-	 -RK
-	'/
-    {method} + consensus(Biclique) : Biclique[]
+	/' We really need just one. We assume that it spans the whole graph
+	and we know the graph. '/
+	{method} + Biclique(Graph, Set<Vertex>)
+    {method} + getLeft() : Set<Vertex>
+    {method} + getRight() : Set<Vertex>
+    {method} + getGraph() : Graph
+    {method} + absorbs(Biclique) : boolean
+    {method} + consensus(Biclique) : Set<Biclique>
+	{method} + extension(Set<Biclique>) : Biclique
   }
 
   Biclique --* Graph
 
   interface MaximalBicliquesAlgorithm {
-    {method}{abstract} + findMaxBicliques(Graph) : Biclique[]
+    {method}{abstract} + findMaxBicliques(Graph) : Set<Biclique>
   }
 
   /'
