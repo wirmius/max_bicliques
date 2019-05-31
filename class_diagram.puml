@@ -51,7 +51,7 @@ I would implement the strategy design pattern, but one can do that in one line..
 Improvement: Now in every call of maxBicliques one can choose
 the proper algorithm directly. -RK
 '/
-    {method}{abstract} + maxBicliques(MaximalBicliquesAlgorithm) : Biclique[]
+'    {method}{abstract} + maxBicliques(MaximalBicliquesAlgorithm) : Biclique[]
   }
 
 /'
@@ -61,8 +61,8 @@ Hadi, first I have displaced your comment for better fitting.
 Second, I don't think it is necessary to distinguish between left and right vertices. -RK
 '/
   interface Vertex {
-    {method}{abstract} + getNeighbours() : Vertex[]
-    {method}{abstract} + getEdges() : Edge[]
+    {method}{abstract} + getNeighbours() : Set<Vertex>
+    {method}{abstract} + getEdges() : Set<Edge>
   }
   
   interface Edge {
