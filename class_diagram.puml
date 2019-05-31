@@ -4,7 +4,21 @@ to make regarding one part of the program or another, just make a
 comment windows in here like this.
 Sign it with your initials as well. -MI
 
+Please fill in this form so that I don't have to look through the whole thing again.
+Responsibilities:
+- Tests:
+- UI: Rolland
+- Graphs and Bicliques:
+
+Algorithms:
+MI:
+RK:
+HS:
+
 I cleared the logs of discussion to reduce clutter. Don't leave long messages in the diagram unless essential. -MI
+
+
+
 '/
 
 @startuml
@@ -14,9 +28,8 @@ package bicliques {
 ' The graph section
 package bicliques.graphs {
 
-
   'Let's stick to naming the vertexes. We don't care about the edges that much.
-  ' We just need to be able to show in the end what goes where.
+  ' We just need to be able to show which vertice goes where.
   interface Graph<V> {
     {method}{abstract} + getVertices() : Map<V, Vertex<V>>
     {method}{abstract} + getVertexCount() : int
@@ -27,12 +40,6 @@ package bicliques.graphs {
     }
 
 
-/'
-I think that we need define separate Vertexs for right and left Neighbours. -HS
-
-Hadi, first I have displaced your comment for better fitting.
-Second, I don't think it is necessary to distinguish between left and right vertices. -RK
-'/
   interface Vertex<V> {
     {method}{abstract} + getIdentifier() : V
     {method}{abstract} + getNeighbours() : Set<Vertex>
@@ -47,20 +54,8 @@ Second, I don't think it is necessary to distinguish between left and right vert
   Vertex -* Graph
   Edge -* Graph
 
-/' A graph can have multiple bicliques. Therefore we should not incorporate biclique structure into the Graph. '/
-/'  class BipartiteGraph {
-    {field} - left : Vertex[]
-    {field} - right : Vertex[]
-    {field} - edges : Edge[]
-    {method} + BipartiteGraph(Vertex[], Vertex[], Edge[])
-    {method} + getLeft() : Vertex[]
-    {method} + getRight() : Vertex[]
-    {method} + getLeftCount(): int
-    {method} + getRightCount(): int
-  }
-  
-  Graph <|.. BipartiteGraph
- '/
+  ' as far as the graph implementation goes, it's on whoever one of us takes on it. As long as it sticks
+  ' to this interfaces it's fine.
 }
 
 
@@ -89,18 +84,18 @@ So do I. In my suggested screenshot of a possible UI the menu would provide
 package bicliques.algorithms {
 
   class Biclique {
-    {field} - left : Set<Vertex>
-    {field} - right : Set<Vertex>
-    {field} - graph : Graph
-	/' constructors for different cases -RK'/
-	/' We really need just one. We assume that it spans the whole graph
-	and we know the graph. '/
+    {field} # left : Set<Vertex>
+    {field} # right : Set<Vertex>
+    {field} # graph : Graph
+    ' We really need just one. We assume that it spans the whole graph and we know the graph.
 	{method} + Biclique(Graph, Set<Vertex>)
+    ' no need to keep the mapping here since we can always ask the Graph
     {method} + getLeft() : Set<Vertex>
     {method} + getRight() : Set<Vertex>
     {method} + getGraph() : Graph
     {method} + absorbs(Biclique) : boolean
     {method} + consensus(Biclique) : Set<Biclique>
+     ' not completely sure about this one
 	{method} + extension(Set<Biclique>) : Biclique
   }
 
