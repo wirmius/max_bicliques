@@ -37,9 +37,9 @@ package bicliques {
 package bicliques.graphs {
 
   interface Graph {
-    {method}{abstract} + getVertices() : Vertex[]
+    {method}{abstract} + getVertices() : TreeSet<Vertex>
     {method}{abstract} + getVertexCount() : int
-    {method}{abstract} + getEdges() : Edge[]
+    {method}{abstract} + getEdges() : TreeSet<Edge>
     {method}{abstract} + getEdgeCount() : int
 /'
 I don't think these two methods should be in the general graph interface.
@@ -61,8 +61,8 @@ Hadi, first I have displaced your comment for better fitting.
 Second, I don't think it is necessary to distinguish between left and right vertices. -RK
 '/
   interface Vertex {
-    {method}{abstract} + getNeighbours() : Vertex[]
-    {method}{abstract} + getEdges() : Edge[]
+    {method}{abstract} + getNeighbours() : TreeSet<Vertex>
+    {method}{abstract} + getEdges() : TreeSet<Edge>
   }
   
   interface Edge {
@@ -74,12 +74,12 @@ Second, I don't think it is necessary to distinguish between left and right vert
   Edge -* Graph
   
   class BipartiteGraph {
-    {field} - left : Vertex[]
-    {field} - right : Vertex[]
-    {field} - edges : Edge[]
-    {method} + BipartiteGraph(Vertex[], Vertex[], Edge[])
-    {method} + getLeft() : Vertex[]
-    {method} + getRight() : Vertex[]
+    {field} - left : TreeSet<Vertex>
+    {field} - right : TreeSet<Vertex>
+    {field} - edges : TreeSet<Edge>
+    {method} + BipartiteGraph(TreeSet<Vertex>, TreeSet<Vertex>, TreeSet<Edge>)
+    {method} + getLeft() : TreeSet<Vertex>
+    {method} + getRight() : TreeSet<Vertex>
     {method} + getLeftCount(): int
     {method} + getRightCount(): int
   }
@@ -123,9 +123,9 @@ but I never got feedback (except from Hadi). Please take a look and comment in *
 '    {field} - graph : Graph
 '/
 	/' constructors for different cases -RK'/
-	{method} + Biclique(Vertex[], Vertex[])
-	{method} + Biclique(Vertex, Vertex[])
-	{method} + Biclique(Vertex[], Vertex)
+	{method} + Biclique(TreeSet<Vertex>, TreeSet<Vertex>)
+	{method} + Biclique(Vertex, TreeSet<Vertex>)
+	{method} + Biclique(TreeSet<Vertex>, Vertex)
 /'
 Why should we need access to a graph from a biclique? -RK
 '    {method} + getGraph() : Graph[] --o Graph
