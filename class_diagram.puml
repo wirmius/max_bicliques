@@ -125,6 +125,12 @@ For me it would make more sense if Biclique is displaced:
 1. Since Biclique is a graph it should be in the graph package.
 2. Since it is a (complete) bipartite graph it should be derived from that.
 -RK
+
+!!!URGENT!!!
+A couple of days ago I branched to new_structure to visualize my suggestions
+but I never got feedback (except from Hadi). Please take a look and comment in *master* or in redmine (as Hadi already did).
+-RK
+
 '    {field} - graph : Graph
 '/
 	/' constructors for different cases -RK'/
