@@ -63,17 +63,6 @@ Second, I don't think it is necessary to distinguish between left and right vert
   interface Vertex {
     {method}{abstract} + getNeighbours() : Vertex[]
     {method}{abstract} + getEdges() : Edge[]
-	/'
-	 ' For improvements concerning bipartite graphs it is important to decide
-	 ' if the single vertex is situated in left or in right set of vertices.
-	 ' I think the easiest way is to provide two public methods
-	 ' (internally there could be one method doing the job).
-	 -RK
-	'/
-	/' Vertex v -> Biclique ({v}, v.getNeighbours()) -RK'/
-    {method}{abstract} + getLeftStar() : Biclique
-	/' Vertex v -> Biclique (v.getNeighbours(), {v}) -RK'/
-    {method}{abstract} + getRightStar() : Biclique
   }
   
   interface Edge {
