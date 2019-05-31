@@ -7,17 +7,18 @@ Sign it with your initials as well. -MI
 Please fill in this form so that I don't have to look through the whole thing again.
 Responsibilities:
 - Tests:
-- UI: Rolland
+- UI: Roland
 - Graphs and Bicliques:
 
 Algorithms:
 MI:
-RK:
+RK: MICA
 HS:
 
 I cleared the logs of discussion to reduce clutter. Don't leave long messages in the diagram unless essential. -MI
 
-
+BipartiteGraph should be implemented since the project description states:
+"Given a bipartite graph, find all maximal bicliques." -RK
 
 '/
 
@@ -83,6 +84,8 @@ So do I. In my suggested screenshot of a possible UI the menu would provide
 ' The algorithms section
 package bicliques.algorithms {
 
+  ' Why should fields have visibiliy "protected" (#)? -RK
+  '
   class Biclique {
     {field} # left : Set<Vertex>
     {field} # right : Set<Vertex>
@@ -96,6 +99,7 @@ package bicliques.algorithms {
     {method} + absorbs(Biclique) : boolean
     {method} + consensus(Biclique) : Set<Biclique>
      ' not completely sure about this one
+     ' I would drop it. -RK
 	{method} + extension(Set<Biclique>) : Biclique
   }
 
@@ -106,12 +110,12 @@ package bicliques.algorithms {
   }
 
   /'
-  MICA algorithm improved for bipartite graphs. -RK
+  MICA algorithm -RK
   '/
-  class MICAB {
+  class MICA {
   }
   
-  MaximalBicliquesAlgorithm <|.. MICAB
+  MaximalBicliquesAlgorithm <|.. MICA
   
 }
 
