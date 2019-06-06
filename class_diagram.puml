@@ -11,7 +11,7 @@ Responsibilities:
 - Graphs and Bicliques: MI
 
 Algorithms:
-MI:
+MI: ?
 RK: MICA
 HS: MBEA
 
@@ -37,7 +37,7 @@ package bicliques.graphs {
         {method}{abstract} + getEdges() : Map<E, Edge>
         {method}{abstract} + getEdgeCount() : int
         {method}{abstract} + addVertex(V) : void
-        {method}{abstract} + addEdge(E, V1, V2) : void
+        {method}{abstract} + addEdge(E, V, V) : void
         {method}{abstract} + addEdge(Vertex<V>, Vertex<V>): void
     }
 
@@ -60,6 +60,11 @@ package bicliques.graphs {
   ' to this interfaces it's fine.
     Graph +-- Edge
     Graph +-- Vertex
+    
+  ' We will need some graph class to store the graph data, please provide some. -RK
+    class SomeGraph<V, E> {
+    }
+    Graph <|.. SomeGraph
 }
 
 
@@ -103,6 +108,7 @@ package bicliques.algorithms {
     {method} + consensus(Biclique) : Set<Biclique>
      ' not completely sure about this one
      ' I would drop it. -RK
+     ' What does this method do? -RK
 	{method} + extension(Set<Biclique>) : Biclique
   }
 
@@ -126,7 +132,13 @@ package bicliques.algorithms {
   class MBEA {
   }
   
-  'MaximalBicliquesAlgorithm
+  MaximalBicliquesAlgorithm <|.. MBEA
+  
+  /'
+  TODO: Mykyta's algorithm is missing. -RK 
+  '/
+  
+  MaximalBicliquesAlgorithm <|.. MykytasAlgorithm
   
 }
 
