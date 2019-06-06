@@ -119,6 +119,16 @@ package bicliques.algorithms {
   
 }
 
+ /'
+  MBEA algorithm improved for bipartite graphs. -HS
+ '/
+  class MBEA {
+  }
+  
+  //MaximalBicliquesAlgorithm
+  
+}
+
 package bicliques.test {
 
 /'
