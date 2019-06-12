@@ -1,35 +1,44 @@
 package graphs;
 
-import java.util.*;
-
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * Adapted from the Adjacency Graph by Alexander Baumgartner.
  * Adjacency Graph from the slides. Essentially everything is copypasted from the slides with minor modifications.
  *
- * @param <V>
- * @param <E>
+ * @param <V> payload for the vertices
+ * @param <E> payload for the edges
  */
-public class AdjacencyMapGraph<V, E> {
+public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Comparable<? super E>> implements Graph<V, E> {
     private boolean directed;
-    private List<Vertex> vertices = new LinkedList<>();
-    private List<Edge> edges = new LinkedList<>();
+    private Map<V, AdjacencyMapVertex<V>> vertices;
+    private Map<E, AdjacencyMapEdge<E>> edges;
 
-    AdjacencyMapGraph(boolean directed) {
+    /**
+     * Initializer.
+     * @param directed whether the graph is directed
+     */
+    protected AdjacencyMapGraph(boolean directed) {
         this.directed = directed;
+        this.vertices = new TreeMap<>();
+        this.edges = new TreeMap<>();
+
     }
 
-    public class Edge {
+    public class AdjacencyMapEdge<E> implements Graph.Edge<E> {
         private E elem;  // Weight, name, ...
-        private Vertex u, v;
+        private AdjacencyMapVertex<V> u, v;
 
-        public Edge(Vertex u, Vertex v, E elem) {
+        protected AdjacencyMapEdge(AdjacencyMapVertex u, AdjacencyMapVertex v, E elem) {
             this.u = u;
             this.v = v;
             this.elem = elem;
         }
 
-        public Vertex opposite(Vertex v) {
+        public AdjacencyMapVertex opposite(AdjacencyMapVertex v) {
             assert this.v == v || this.u == v;
             if (this.v == v) {
                 return this.u;
@@ -38,14 +47,22 @@ public class AdjacencyMapGraph<V, E> {
             } else return null;
         }
 
+        @Override
         public E getElem() {
             return elem;
         }
 
+        @Override
+        public void setElem(E elem) {
+            this.elem = elem;
+        }
+
+        @Override
         public Vertex getStart() {
             return u;
         }
 
+        @Override
         public Vertex getEnd() {
             return v;
         }
@@ -56,29 +73,33 @@ public class AdjacencyMapGraph<V, E> {
         }
     }
 
-    public class Vertex {
+    public class AdjacencyMapVertex<V> implements Graph.Vertex<V> {
         private V elem;
-        private Map<Vertex, Edge> outgoing, incoming;
+        private Set<AdjacencyMapEdge<E>> outgoing, incoming;
 
-        public Vertex(V elem) {
-            outgoing = new HashMap<>();
-            if (AdjacencyMapGraph.this.directed) incoming = new HashMap<>();
+        protected AdjacencyMapVertex(V elem) {
+            outgoing = new TreeSet<>();
+            if (AdjacencyMapGraph.this.directed) incoming = new TreeSet<>();
             else incoming = outgoing;
             this.elem = elem;
         }
 
-        public Map<Vertex, Edge> getOutgoing() {
+        @Override
+        public Set<AdjacencyMapEdge<E>> getOutgoingEdges() {
             return outgoing;
         }
 
-        public Map<Vertex, Edge> getIncoming() {
+        @Override
+        public Set<AdjacencyMapEdge<E>> getIncomingEdges() {
             return incoming;
         }
 
+        @Override
         public V getElem() {
             return elem;
         }
 
+        @Override
         public void setElem(V elem) {
             this.elem = elem;
         }
@@ -89,70 +110,53 @@ public class AdjacencyMapGraph<V, E> {
         }
     }
 
-    public Edge getEdge(Vertex u, Vertex v) {
-        return u.getOutgoing().get(v);
+    @Override
+    public Map<E, AdjacencyMapEdge<E>> getEdges() {
+        return this.edges;
     }
 
-    public Vertex insertVertex(V elem) {
-        Vertex v = new Vertex(elem);
-        vertices.add(v);
-        return v;
+    @Override
+    public Map<V, AdjacencyMapVertex<V>> getVertices() {
+        return this.vertices;
     }
 
-    public List<Vertex> vertices() {
-        return vertices;
+
+    @Override
+    public int getVertexCount() {
+        return this.vertices.size();
     }
 
-    public List<Edge> edges() {
-        return edges;
+    @Override
+    public int getEdgeCount() {
+        return this.edges.size();
     }
 
-    public Edge insertEdge(Vertex u, Vertex v, E elem) {
-        assert getEdge(u, v) == null;//Already exists
-        Edge e = new Edge(u, v, elem);
-        edges.add(e);
-        u.getOutgoing().put(v, e);
-        v.getIncoming().put(u, e);
-        return e;
+    @Override
+    public void addVertex(V elem) {
+        assert this.vertices.get(elem) == null;
+        AdjacencyMapVertex<V> v = new AdjacencyMapVertex(elem);
+        this.vertices.put(elem, v);
     }
 
-    public void depthFirst(Vertex v, Set<Vertex> known, Map<Vertex, Edge> forest) {
-        known.add(v);
-        for (Edge e : v.getOutgoing().values()) {
-            Vertex u = e.opposite(v);
-            if (!known.contains(u)) {
-                forest.put(u, e);
-                depthFirst(u, known, forest);
-            }
-        }
+    @Override
+    public void addEdge(E edge, V v1, V v2) {
+        assert this.edges.get(edge) == null;
+        assert this.vertices.get(v1) == null;
+        assert this.vertices.get(v2) == null;
+
+        this.addVertex(v1);
+        this.addVertex(v2);
+
+        AdjacencyMapEdge<E> e = new AdjacencyMapEdge(this.vertices.get(v1), this.vertices.get(v2), edge);
+        this.edges.put(edge, e);
     }
 
-    public void breadthFirst(Vertex v, Set<Vertex> known, Map<Vertex, Edge> forest) {
-        Queue<Vertex> q = new LinkedList<>();
-        known.add(v);
-        q.add(v);
-        while (!q.isEmpty()) {
-            v = q.poll();
-            for (Edge e : v.getOutgoing().values()) {
-                Vertex u = e.opposite(v);
-                if (!known.contains(u)) {
-                    forest.put(u, e);
-                    known.add(u);
-                    q.add(u);
-                }
-            }
-        }
-    }
+    @Override
+    public void addEdge(E edge, Vertex<V> v1, Vertex<V> v2) {
+        assert this.vertices.get(v1.getElem()) != null;
+        assert this.vertices.get(v2.getElem()) != null;
 
-    public List<Edge> constructPath(Vertex u, Vertex v, Map<Vertex, Edge> forest) {
-        LinkedList<Edge> path = new LinkedList<>();
-        if (forest.get(v) != null) {
-            while (v != u) {
-                Edge edge = forest.get(v);
-                path.addFirst(edge);
-                v = edge.opposite(v);
-            }
-        }
-        return path;
+        AdjacencyMapEdge<E> e = new AdjacencyMapEdge(this.vertices.get(v1), this.vertices.get(v2), edge);
+        this.edges.put(edge, e);
     }
 }
