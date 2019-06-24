@@ -267,7 +267,7 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		// input panel
 		JPanel inputPanel = new JPanel(new BorderLayout());
 		inputPanel.add(inputCaptionPanel, BorderLayout.PAGE_START);
-		inputPanel.add(txtInput, BorderLayout.CENTER);
+		inputPanel.add(inputScrollPane, BorderLayout.CENTER);
 		//inputPanel.add(Box.createRigidArea(new Dimension(0, 10)), BorderLayout.PAGE_END);
 		inputPanel.add(Box.createRigidArea(new Dimension(borderWidth, 0)), BorderLayout.LINE_START);
 		inputPanel.add(Box.createRigidArea(new Dimension(borderWidth, 0)), BorderLayout.LINE_END);
@@ -282,7 +282,7 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		// output panel
 		JPanel outputPanel = new JPanel(new BorderLayout());
 		outputPanel.add(outputCaptionPanel, BorderLayout.PAGE_START);
-		outputPanel.add(txtOutput, BorderLayout.CENTER);
+		outputPanel.add(outputScrollPane, BorderLayout.CENTER);
 		outputPanel.add(Box.createRigidArea(new Dimension(0, borderWidth)), BorderLayout.PAGE_END);
 		outputPanel.add(Box.createRigidArea(new Dimension(borderWidth, 0)), BorderLayout.LINE_START);
 		outputPanel.add(Box.createRigidArea(new Dimension(borderWidth, 0)), BorderLayout.LINE_END);
