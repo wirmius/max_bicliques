@@ -15,5 +15,10 @@ import graphs.Graph;
  */
 public interface MaximalBicliquesAlgorithm {
 
+	/**
+	 * Computes all maximal bicliques of the given graph.
+	 * @param graph Graph to examine.
+	 * @return Set of maximal bicliques of graph.
+	 */
 	Set<Biclique> findMaxBicliques(Graph graph);
 }
