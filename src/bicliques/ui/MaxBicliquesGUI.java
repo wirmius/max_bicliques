@@ -5,18 +5,17 @@ package bicliques.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -26,13 +25,12 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
-
 import bicliques.algorithms.MICA;
 import bicliques.algorithms.MaximalBicliquesAlgorithm;
+import bicliques.graphs.Graph;
+import bicliques.graphs.GraphVendingMachine;
 
 /**
  * @author Roland Koppenberger
@@ -54,24 +52,15 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 	private class Computation extends Thread {
 		
 		/**
-		 * Constructor for computation thread.
-		 */
-		public Computation() {
-		}
-		
-		/**
-		 * Computes set of maximal bicliques and updates output.
+		 * Computes set of maximal bicliques.
 		 */
 		public void run() {
-			boolean interrupted = false;
-			for (int i = 500000; i > 0; i--) {
-				txtOutput.setText("... time to go: " + i + " ...");
-				if (isInterrupted())
-					return;
-			}
+			if (mba != null)
+				mba.findMaxBicliques(graph);
+			if (isInterrupted())
+				return;
 			btnCompute.setEnabled(false);
 			isComputing = false;
-			outputComputed = true;
 			txtOutput.setText("set of maximal bicliques computed");
 			menuInput.setEnabled(true);
 			menuOutput.setEnabled(true);
@@ -126,9 +115,6 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 	// fonts
 	private static final Font FONT_PLAIN = new Font(Font.MONOSPACED, Font.PLAIN, 16);
 	
-	// help file name
-	private static final String HELP_FILE = "help.htm";
-	
 	// icon
 	private final static String ICON = "icon.png";
 	
@@ -141,8 +127,6 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 	
 	// windows
 	private JFrame frame;
-	private JDialog helpDialog;
-	
 	// accessible components
 	private JLabel lblAlgorithm;
 	private JTextArea txtInput;
@@ -155,8 +139,6 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 	private JRadioButtonMenuItem algorithmMBEA;
 	private JRadioButtonMenuItem algorithmMICA;
 	
-	// status variables
-	private boolean outputComputed = false;
 	private boolean graphLoaded = false;
 	private boolean algorithmChosen = false;
 	private boolean isComputing = false;
@@ -166,6 +148,9 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 	
 	// computation thread
 	private Computation computation;
+	
+	// graph
+	private Graph<String, String> graph;
 	
 	/**
 	 * Constructs GUI.
@@ -436,15 +421,17 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(ICON));
 		
-/*		// add window listener for closing event
+		// add window listener for closing event
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				// interrupt thread if applicable
-				if (simulation != null)
-					simulation.interrupt();
+				if (computation != null)
+					computation.interrupt();
 			}
 		});
 		
+		// TODO
+/*
 		// add component listener for resizing event
 		frame.addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
@@ -477,8 +464,15 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		
 		case ACT_MENU_LOAD_INPUT:
 			// TODO
+			graph = GraphVendingMachine.lemmeHaveAnEmptyGraph(false);
 			txtInput.setText("graph is loaded");
-			setGraphLoaded();
+			// TODO
+			graphLoaded = true;
+			if (algorithmChosen) {
+				btnCompute.setEnabled(true);
+			}
+			txtOutput.setText(LBL_NOT_COMPUTED);
+			menuOutput.setEnabled(false);
 			return;
 			
 		case ACT_MENU_SAVE_OUTPUT:
@@ -513,7 +507,6 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 			
 		case ACT_BTN_COMPUTE:
 			btnCompute.setEnabled(false);
-			outputComputed = false;
 			menuOutput.setEnabled(false);
 			if (isComputing) {
 				// interrupt simulation
@@ -546,17 +539,6 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		algorithmChosen = true;
 		if (graphLoaded)
 			btnCompute.setEnabled(true);
-		outputComputed = false;
-		txtOutput.setText(LBL_NOT_COMPUTED);
-		menuOutput.setEnabled(false);
-	}
-	
-	private void setGraphLoaded() {
-		graphLoaded = true;
-		if (algorithmChosen) {
-			btnCompute.setEnabled(true);
-		}
-		outputComputed = false;
 		txtOutput.setText(LBL_NOT_COMPUTED);
 		menuOutput.setEnabled(false);
 	}
