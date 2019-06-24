@@ -1,4 +1,4 @@
-package graphs;
+package bicliques.graphs;
 
 import java.util.Set;
 

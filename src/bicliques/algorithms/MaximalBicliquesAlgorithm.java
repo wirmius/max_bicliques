@@ -1,12 +1,12 @@
 /**
  * 
  */
-package algorithms;
+package bicliques.algorithms;
 
 import java.util.Set;
 
-import graphs.Biclique;
-import graphs.Graph;
+import bicliques.graphs.Biclique;
+import bicliques.graphs.Graph;
 
 /**
  * Interface for all algorithms computing the set of maximal bicliques of a graph.

@@ -4,4 +4,4 @@
  * @author Roland Koppenberger
  * @author Hadi Sanaei
  */
-package algorithms;
+package bicliques.algorithms;

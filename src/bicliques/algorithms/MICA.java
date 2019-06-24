@@ -1,12 +1,12 @@
 /**
  * 
  */
-package algorithms;
+package bicliques.algorithms;
 
 import java.util.Set;
 
-import graphs.Biclique;
-import graphs.Graph;
+import bicliques.graphs.Biclique;
+import bicliques.graphs.Graph;
 
 /**
  * Implements MICA algorithm for finding all

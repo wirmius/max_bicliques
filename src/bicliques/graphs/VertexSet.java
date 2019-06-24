@@ -1,4 +1,4 @@
-package graphs;
+package bicliques.graphs;
 
 
 public class VertexSet extends Vertex{
