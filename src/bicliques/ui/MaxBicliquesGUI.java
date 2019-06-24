@@ -56,6 +56,7 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		 */
 		public void run() {
 			if (mba != null)
+				// TODO: return value Biclique[]
 				mba.findMaxBicliques(graph);
 			if (isInterrupted())
 				return;
