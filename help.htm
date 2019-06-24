@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <style>
+      body {
+          font-family: Helvetica, Arial, Geneva, sans-serif;
+      }
+      h1 {
+        text-align: left;
+        margin-bottom: 0.5em;
+      }
+      h2 {
+        color: #f08000;
+        margin-top: 2em;
+      }
+      article {
+      }
+      section {
+        padding: 1em;
+      }
+      @media (min-width: 40em) {
+        article {
+          display: grid;  
+	        grid-template-columns: repeat(5, 1fr);
+        }
+        body {
+          margin-left: 5em;
+          margin-right: 5em;
+        }
+      }
+    </style>
+    
+    <title>Help</title>
+  </head>
+
+  <body>
+
+  <h1><img src="icon.png" alt="Maximal bicliques icon.">
+  Maximal bicliques of a graph</h1>
+  
+  <br>
+  This application computes the set of maximal bicliques of a graph with different algorithms.
+  <br>
+  <br>
+  <h2>Algorithms</h2>
+  
+  <h3>Algorithm LEX</h3>
+
+  (TODO)
+  
+  <h3>Algorithm MBEA </h3>
+
+  (TODO)
+  
+  <h3>Modular Input Consensus Algorithm (MICA)</h3>
+
+  (TODO)
+  
+  <br>
+  <br>
+  <h2>User interface</h2>
+
+  <ul>
+    <li>Menu Input:
+      <ul>
+        <li><b>Load</b>: Load a graph from file.
+      </ul>
+    <li>Menu Output:
+      <ul>
+        <li><b>Save</b>: Save computed set of maximal bicliques.
+      </ul>
+    <li>Menu Algorithm:
+      <ul>
+        <li><b>LEX</b>: Choose algorithm LEX.
+        <li><b>MBEA</b>: Choose algorithm MBEA.
+        <li><b>MICA</b>: Choose <b>M</b>odular <b>I</b>nput <b>C</b>onsensus <b>A</b>lgorithm.
+      </ul>
+    <li>Menu Help:
+      <ul>
+        <li><b>Help</b>: Opens a non modal window to display this help file.
+        <li><b>About</b>: Information about version and authors.
+      </ul>
+    <li>The help window is non modal, so it can be left open during computations.
+  </ul>
+  <br>
+  </body>
+</html>

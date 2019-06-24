@@ -12,11 +12,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -119,6 +123,9 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 	// fonts
 	private static final Font FONT_PLAIN = new Font(Font.MONOSPACED, Font.PLAIN, 16);
 	
+	// help file name
+	private static final String HELP_FILE = "help.htm";
+	
 	// icon
 	private final static String ICON = "icon.png";
 	
@@ -131,6 +138,8 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 	
 	// windows
 	private JFrame frame;
+	private JDialog helpDialog;
+	
 	// accessible components
 	private JLabel lblAlgorithm;
 	private JTextArea txtInput;
@@ -502,18 +511,18 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 			return;
 			
 		case ACT_MENU_HELP_DIALOG:
-			// TODO
+			showHelpDialog();
 			return;
 			
 		case ACT_MENU_HELP_ABOUT:
 			JOptionPane.showMessageDialog(frame,
-					"Version 1.0, June 2019\n"
-					+ "Roland Koppenberger\n"
-					+ "Mykyta Ielanskyi\n"
-					+ "Hadi Sanaei",
-					"Maximal bicliques",
-					JOptionPane.INFORMATION_MESSAGE,
-					new ImageIcon(ICON));
+				"Version 1.0, June 2019\n"
+				+ "Roland Koppenberger\n"
+				+ "Mykyta Ielanskyi\n"
+				+ "Hadi Sanaei",
+				"Maximal bicliques",
+				JOptionPane.INFORMATION_MESSAGE,
+				new ImageIcon(ICON));
 			return;
 			
 		case ACT_BTN_COMPUTE:
@@ -554,4 +563,53 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		menuOutput.setEnabled(false);
 	}
 
+	/**
+	 * Displays non modal help dialog.
+	 */
+	private void showHelpDialog() {
+		
+		// create help dialog if not existing
+		if (helpDialog == null) {
+		
+			// editor pane in scroll pane
+			JEditorPane edit = new JEditorPane();
+			JScrollPane scrollPane = new JScrollPane(edit);
+			
+			// load content
+			File file = new File(HELP_FILE);
+			try {
+				edit.setPage(file.toURI().toURL());
+			} catch (IOException e) {
+				edit.setText(
+					"<b>We are very sorry but the content cannot be loaded.</b><p>" + e.getMessage()
+				);
+			}
+			edit.setEditable(false);
+			
+			// close button in button pane
+			JButton btnClose = new JButton("Close");
+			JPanel buttonPane = new JPanel();
+			buttonPane.add(btnClose);
+			
+			// scroll and button panes in panel
+			JPanel panel = new JPanel(new BorderLayout());
+			panel.add(scrollPane, BorderLayout.CENTER);
+			panel.add(buttonPane, BorderLayout.PAGE_END);
+			
+			// create dialog
+			helpDialog = new JDialog(frame, "Help", false);		
+			helpDialog.setPreferredSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
+			helpDialog.setMinimumSize(helpDialog.getPreferredSize());
+			
+			// panel in dialog
+			helpDialog.setContentPane(panel);
+			
+			// action for close button
+			btnClose.addActionListener(e->helpDialog.setVisible(false));
+		}
+		
+		// show dialog
+		helpDialog.setVisible(true);
+	}
+	
 }
