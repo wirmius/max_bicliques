@@ -15,12 +15,14 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
@@ -33,6 +35,7 @@ import bicliques.graphs.Graph;
 import bicliques.graphs.GraphVendingMachine;
 
 /**
+ * GUI for computing the set of maximal bicliques of a graph.
  * @author Roland Koppenberger
  * @version 1.0, June 24th 2019.
  */
@@ -503,7 +506,14 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 			return;
 			
 		case ACT_MENU_HELP_ABOUT:
-			// TODO
+			JOptionPane.showMessageDialog(frame,
+					"Version 1.0, June 2019\n"
+					+ "Roland Koppenberger\n"
+					+ "Mykyta Ielanskyi\n"
+					+ "Hadi Sanaei",
+					"Maximal bicliques",
+					JOptionPane.INFORMATION_MESSAGE,
+					new ImageIcon(ICON));
 			return;
 			
 		case ACT_BTN_COMPUTE:
