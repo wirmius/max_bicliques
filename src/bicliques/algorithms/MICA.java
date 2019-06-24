@@ -31,7 +31,10 @@ public class MICA implements MaximalBicliquesAlgorithm {
 	 */
 	@Override
 	public Set<Biclique> findMaxBicliques(Graph graph) {
-		// TODO Auto-generated method stub
+		// TODO
+		double x;
+		for (long i = 0; i < 100000000; i++)
+			x = Math.log(1 + Math.sin(Math.sqrt(i)));
 		return null;
 	}
 
