@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -30,12 +31,57 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
+import bicliques.algorithms.MICA;
+import bicliques.algorithms.MaximalBicliquesAlgorithm;
+
 /**
  * @author Roland Koppenberger
  * @version 1.0, June 24th 2019.
  */
 public class MaxBicliquesGUI implements Runnable, ActionListener {
 
+	/* =======================================================================================
+	 * 
+	 *   thread for computation
+	 * 
+	 * =======================================================================================
+	 */
+	
+	/**
+	 * Computation thread implemented as inner class.<br>
+	 * Computes the set of maximal bicliques of a given graph.
+	 */
+	private class Computation extends Thread {
+		
+		/**
+		 * Constructor for computation thread.
+		 */
+		public Computation() {
+		}
+		
+		/**
+		 * Computes set of maximal bicliques and updates output.
+		 */
+		public void run() {
+			boolean interrupted = false;
+			for (int i = 500000; i > 0; i--) {
+				txtOutput.setText("... time to go: " + i + " ...");
+				if (isInterrupted())
+					return;
+			}
+			btnCompute.setEnabled(false);
+			isComputing = false;
+			outputComputed = true;
+			txtOutput.setText("set of maximal bicliques computed");
+			menuInput.setEnabled(true);
+			menuOutput.setEnabled(true);
+			menuAlgorithm.setEnabled(true);
+			btnCompute.setText(LBL_COMPUTE);
+			btnCompute.setEnabled(true);			
+		}
+		
+	}
+	
 	/* =======================================================================================
 	 * 
 	 *   constants
@@ -49,9 +95,11 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 	// labels
 	private static final String LBL_CAPTION = "Maximal bicliques of a graph";
 	
-	private static final String LBL_NO_GRAPH     = "(no graph)";	
-	private static final String LBL_NOT_COMPUTED = "(not computed)";	
-	private static final String LBL_NONE_CHOOSEN = "(none choosen)";
+	private static final String LBL_NO_GRAPH            = "(no graph)";
+	private static final String LBL_NOT_COMPUTED        = "(not computed)";
+	private static final String LBL_COMPUTATION_ABORTED = "(computation aborted)";
+	private static final String LBL_IS_COMPUTING        = "... is computing ...";
+	private static final String LBL_NONE_CHOOSEN        = "(none choosen)";
 	
 	private static final String LBL_INPUT             = " INPUT";
 	private static final String LBL_ALGORITHM_CAPTION = "Algorithm: ";
@@ -100,10 +148,25 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 	private JTextArea txtInput;
 	private JTextArea txtOutput;
 	private JButton btnCompute;
+	private JMenu menuInput;
+	private JMenu menuAlgorithm;
+	private JMenu menuOutput;
 	private JRadioButtonMenuItem algorithmLEX;
 	private JRadioButtonMenuItem algorithmMBEA;
 	private JRadioButtonMenuItem algorithmMICA;
-		
+	
+	// status variables
+	private boolean outputComputed = false;
+	private boolean graphLoaded = false;
+	private boolean algorithmChosen = false;
+	private boolean isComputing = false;
+	
+	// algorithm
+	private static MaximalBicliquesAlgorithm mba;
+	
+	// computation thread
+	private Computation computation;
+	
 	/**
 	 * Constructs GUI.
 	 */
@@ -185,6 +248,7 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		btnCompute.setEnabled(false);
 		btnCompute.addActionListener(this);
 		btnCompute.setActionCommand(ACT_BTN_COMPUTE);
+		btnCompute.setPreferredSize(new Dimension(100, 25));
 				
 		/* =======================================================================================
 		 * 
@@ -308,21 +372,22 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		JMenuBar menu = new JMenuBar();
 		
 		// menu input
-		JMenu menuInput = new JMenu("Input");
+		menuInput = new JMenu("Input");
 		JMenuItem loadInput = new JMenuItem("Load...");
 		loadInput.addActionListener(this);
 		loadInput.setActionCommand(ACT_MENU_LOAD_INPUT);
 		menuInput.add(loadInput);
 		
 		// menu output
-		JMenu menuOutput = new JMenu("Output");
+		menuOutput = new JMenu("Output");
+		menuOutput.setEnabled(false);
 		JMenuItem saveOutput = new JMenuItem("Save...");
 		saveOutput.addActionListener(this);
 		saveOutput.setActionCommand(ACT_MENU_SAVE_OUTPUT);
 		menuOutput.add(saveOutput);
 		
 		// menu algorithm
-		JMenu menuAlgorithm = new JMenu("Algorithm");
+		menuAlgorithm = new JMenu("Algorithm");
 		algorithmLEX = new JRadioButtonMenuItem(LBL_LEX, false);
 		algorithmLEX.addActionListener(this);
 		algorithmLEX.setActionCommand(ACT_MENU_ALGORITHM_LEX);
@@ -411,35 +476,89 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		switch (event.getActionCommand()) {
 		
 		case ACT_MENU_LOAD_INPUT:
+			// TODO
+			txtInput.setText("graph is loaded");
+			setGraphLoaded();
 			return;
 			
 		case ACT_MENU_SAVE_OUTPUT:
+			// TODO
 			return;
 			
 		case ACT_MENU_ALGORITHM_LEX:
 			lblAlgorithm.setText(LBL_ALGORITHM_CAPTION + LBL_LEX);
-			btnCompute.setEnabled(true);
+			mba = new MICA(); // TODO
+			setAlgorithmChosen();
 			return;
 			
 		case ACT_MENU_ALGORITHM_MBEA:
 			lblAlgorithm.setText(LBL_ALGORITHM_CAPTION + LBL_MBEA);
-			btnCompute.setEnabled(true);
+			mba = new MICA(); // TODO
+			setAlgorithmChosen();
 			return;
 			
 		case ACT_MENU_ALGORITHM_MICA:
 			lblAlgorithm.setText(LBL_ALGORITHM_CAPTION + LBL_MICA);
-			btnCompute.setEnabled(true);
+			mba = new MICA();
+			setAlgorithmChosen();
 			return;
 			
 		case ACT_MENU_HELP_DIALOG:
+			// TODO
 			return;
 			
 		case ACT_MENU_HELP_ABOUT:
+			// TODO
 			return;
 			
 		case ACT_BTN_COMPUTE:
+			btnCompute.setEnabled(false);
+			outputComputed = false;
+			menuOutput.setEnabled(false);
+			if (isComputing) {
+				// interrupt simulation
+				isComputing = false;
+				if (computation != null)
+					computation.interrupt();				
+				txtOutput.setText(LBL_COMPUTATION_ABORTED);
+				btnCompute.setText(LBL_COMPUTE);
+				menuInput.setEnabled(true);
+				menuAlgorithm.setEnabled(true);
+			} else {
+				// start computation
+				isComputing = true;
+				txtOutput.setText(LBL_IS_COMPUTING);
+				btnCompute.setText(LBL_STOP);
+				menuInput.setEnabled(false);
+				menuAlgorithm.setEnabled(false);
+				computation = new Computation();
+				computation.start();
+			}
+			btnCompute.setEnabled(true);
 			return;
 		}
+	}
+	
+	/**
+	 * Prepare GUI after algorithm has been chosen.
+	 */
+	private void setAlgorithmChosen() {
+		algorithmChosen = true;
+		if (graphLoaded)
+			btnCompute.setEnabled(true);
+		outputComputed = false;
+		txtOutput.setText(LBL_NOT_COMPUTED);
+		menuOutput.setEnabled(false);
+	}
+	
+	private void setGraphLoaded() {
+		graphLoaded = true;
+		if (algorithmChosen) {
+			btnCompute.setEnabled(true);
+		}
+		outputComputed = false;
+		txtOutput.setText(LBL_NOT_COMPUTED);
+		menuOutput.setEnabled(false);
 	}
 
 }
