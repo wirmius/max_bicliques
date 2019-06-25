@@ -72,7 +72,11 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 				return;
 			btnCompute.setEnabled(false);
 			isComputing = false;
+			
+			// TODO
 			txtOutput.setText("set of maximal bicliques computed");
+			// TODO
+			
 			menuInput.setEnabled(true);
 			menuOutput.setEnabled(true);
 			menuAlgorithm.setEnabled(true);
