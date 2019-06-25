@@ -12,15 +12,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -162,8 +165,11 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 	// computation thread
 	private Computation computation;
 	
+	// file chooser
+	private JFileChooser fileChooser;
+	
 	// graph
-	private Graph<String, String> graph;
+	private Graph<String, Integer> graph;
 	
 	/**
 	 * Constructs GUI.
@@ -177,7 +183,7 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		 * 
 		 * =======================================================================================
 		 */
-/*		
+		
 		// create file chooser implementing security confirmation (overwrite existing file)
 		fileChooser = new JFileChooser() {
 			
@@ -188,8 +194,8 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		        File file = getSelectedFile();
 		        if (file.exists() && getDialogType() == SAVE_DIALOG) {
 		            int result = JOptionPane.showConfirmDialog(this,
-		            		MSG_FILE_EXISTS_OVERWRITE,
-		            		TITLE_FILE_EXISTS, JOptionPane.YES_NO_CANCEL_OPTION);
+		            		"The file already exists, overwrite?",
+		            		"File exists", JOptionPane.YES_NO_CANCEL_OPTION);
 		            
 		            switch (result) {
 		            case JOptionPane.YES_OPTION:
@@ -209,7 +215,6 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		};
 		
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-*/
 		
 		/* =======================================================================================
 		 * 
@@ -476,20 +481,37 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		switch (event.getActionCommand()) {
 		
 		case ACT_MENU_LOAD_INPUT:
-			// TODO
-			graph = GraphVendingMachine.lemmeHaveAnEmptyGraph(false);
-			txtInput.setText("graph is loaded");
-			// TODO
-			graphLoaded = true;
-			if (algorithmChosen) {
-				btnCompute.setEnabled(true);
+			// open dialog
+			if (fileChooser.showOpenDialog(frame) != JFileChooser.APPROVE_OPTION)
+				return;
+			
+			// try to load graph
+			graph = loadGraph(fileChooser.getSelectedFile());
+			graphLoaded = (graph != null);
+			if (graphLoaded) {
+				showGraph(graph);
+				if (algorithmChosen)
+					btnCompute.setEnabled(true);
+				txtOutput.setText(LBL_NOT_COMPUTED);
+				menuOutput.setEnabled(false);				
+			} else {
+				txtInput.setText(LBL_NO_GRAPH);
+				btnCompute.setEnabled(false);
+				txtOutput.setText(LBL_NOT_COMPUTED);
+				menuOutput.setEnabled(false);				
 			}
-			txtOutput.setText(LBL_NOT_COMPUTED);
-			menuOutput.setEnabled(false);
 			return;
 			
 		case ACT_MENU_SAVE_OUTPUT:
-			// TODO
+			// save dialog
+			if (fileChooser.showSaveDialog(frame) != JFileChooser.APPROVE_OPTION)
+				return;
+			
+			// get selected file
+			File file = fileChooser.getSelectedFile();
+			
+			// TODO outputComputed?
+			
 			return;
 			
 		case ACT_MENU_ALGORITHM_LEX:
@@ -517,8 +539,8 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		case ACT_MENU_HELP_ABOUT:
 			JOptionPane.showMessageDialog(frame,
 				"Version 1.0, June 2019\n"
-				+ "Roland Koppenberger\n"
 				+ "Mykyta Ielanskyi\n"
+				+ "Roland Koppenberger\n"
 				+ "Hadi Sanaei",
 				"Maximal bicliques",
 				JOptionPane.INFORMATION_MESSAGE,
@@ -550,6 +572,107 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 			btnCompute.setEnabled(true);
 			return;
 		}
+	}
+	
+	/**
+	 * Loads an undirected graph from a text file.<p>
+	 * <b>Fileformat:</b>
+	 * <ul>
+	 * <li>Each line represents a vertex, the content is the vertex name. 
+	 * <li>Lines consisting only of white spaces or empty ones are ignored.
+	 * <li>Two consecutive lines build an edge.
+	 * <li>A remaining single vertex is not allowed.
+	 * </ul> 
+	 * @param graph Loaded graph.
+	 * @return True if graph is loaded, false otherwise.
+	 */
+	private Graph<String, Integer> loadGraph(File file) {
+	    Graph<String, Integer> graph = GraphVendingMachine.lemmeHaveAnEmptyGraph(false);
+	    
+	    int edgeNumber = 1;
+	    
+		try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
+			
+		    String firstLine;
+		    String secondLine;
+		    
+		    outer: while ((firstLine = reader.readLine()) != null) {
+		    	
+		    	// skip empty first line
+				firstLine = firstLine.trim();
+		    	while (firstLine.equals("")) {
+					firstLine = reader.readLine();
+					if (firstLine == null)
+						break outer;
+					firstLine = firstLine.trim();
+		    	}
+		    	
+		    	// read second line
+		    	if ((secondLine = reader.readLine()) == null) {
+					JOptionPane.showMessageDialog(frame,
+							"Remaining single vertex in data.",
+							"Graph could not be loaded",
+							JOptionPane.ERROR_MESSAGE);
+		    		return null;
+		    	}
+		    	
+		    	// skip empty second line
+		    	secondLine = secondLine.trim();
+		    	while (secondLine.equals("")) {
+		    		secondLine = reader.readLine();
+					if (secondLine == null)
+						break outer;
+					secondLine = secondLine.trim();
+		    	}
+		    	
+		    	// add edge to graph
+		    	graph.addEdge(edgeNumber++, firstLine, secondLine);
+			}
+			
+		} catch (FileNotFoundException e) {
+			JOptionPane.showMessageDialog(frame,
+					"File" + file.getName() + "not found.",
+					"Graph could not be loaded",
+					JOptionPane.ERROR_MESSAGE);
+    		return null;
+		
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(frame,
+					"I/O-Error: " + e.getMessage() + ".",
+					"Graph could not be loaded",
+					JOptionPane.ERROR_MESSAGE);
+    		return null;
+		
+		}
+		
+		return graph;
+	}
+	
+	/**
+	 * Displays graph data.
+	 * @param graph Graph to display.
+	 */
+	private void showGraph(Graph<String, Integer> graph) {
+		int numVertices = graph.getVertexCount();
+		int numEdges = graph.getEdgeCount();
+		String txt = "Graph with ";
+		txt += (numVertices == 1 ? "1 vertex" : numVertices + " vertices");
+		txt += " and ";
+		txt += (numEdges == 1 ? "1 edge" : numEdges + " edges");
+		txt += "\n\n";
+		if (numVertices < 20) {
+			txt += graph.getVertices();
+		} else {
+			txt += "(too many vertices to show)";
+		}
+		txt += "\n\n";
+		if (numEdges < 20) {
+			txt += graph.getEdges();
+		} else {
+			txt += "(too many edges to show)";
+		}
+		txt += "\n";
+		txtInput.setText(txt);
 	}
 	
 	/**
