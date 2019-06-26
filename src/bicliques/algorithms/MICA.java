@@ -37,16 +37,6 @@ public class MICA<V extends Comparable<? super V>, E extends Comparable<? super 
 		if (graph.getVertices().size() == 0)
 			return Collections.emptySet();
 
-		System.out.println(graph.getVertexCount());
-		System.out.println(graph.getVertices().size());
-		System.out.println(graph.getVertices().entrySet().size());
-		
-		for (Entry<V, ? extends Vertex<V>> entry : graph.getVertices().entrySet())
-			System.out.println(entry);
-		
-		if (true)
-			return null;
-		
 		// c0:
 		// vertices -> set of star bicliques covering edges of graph
 		// star bicliques are extended to maximal bicliques
