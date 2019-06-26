@@ -134,6 +134,16 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
         public int compareTo(AdjacencyMapVertex<V> vAdjacencyMapVertex) {
             return this.getElem().compareTo(vAdjacencyMapVertex.getElem());
         }
+
+        protected void wireIncomingEdge(AdjacencyMapEdge<E> edge)
+        {
+            this.incoming.add(edge);
+        }
+
+        protected void wireOutgoingEdge(AdjacencyMapEdge<E> edge)
+        {
+            this.outgoing.add(edge);
+        }
     }
 
     @Override
@@ -174,6 +184,12 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
         this.addVertex(v2);
 
         AdjacencyMapEdge<E> e = new AdjacencyMapEdge(this.vertices.get(v1), this.vertices.get(v2), edge);
+
+        // wire up the vertices
+        this.vertices.get(v1).wireOutgoingEdge(e);
+        this.vertices.get(v2).wireIncomingEdge(e);
+
+
         this.edges.put(edge, e);
     }
 
@@ -182,7 +198,13 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
         assert this.vertices.get(v1.getElem()) != null;
         assert this.vertices.get(v2.getElem()) != null;
 
+
         AdjacencyMapEdge<E> e = new AdjacencyMapEdge(this.vertices.get(v1), this.vertices.get(v2), edge);
+
+        // wire up the vertices
+        this.vertices.get(v1).wireOutgoingEdge(e);
+        this.vertices.get(v2).wireIncomingEdge(e);
+
         this.edges.put(edge, e);
     }
 }
