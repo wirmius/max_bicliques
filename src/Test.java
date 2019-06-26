@@ -18,13 +18,7 @@ public class Test {
 		
 		Graph<String, Integer> graph = GraphVendingMachine.lemmeHaveAnEmptyGraph(false);
 		graph.addEdge(1, "1", "2");
-		graph.addEdge(1, "1", "6");
-		graph.addEdge(1, "2", "3");
-		graph.addEdge(1, "3", "6");
-		graph.addEdge(1, "3", "4");
-		graph.addEdge(1, "4", "5");
-		graph.addEdge(1, "4", "6");
-		graph.addEdge(1, "5", "6");
+		graph.addEdge(2, "1", "3");
 
 		Vertex<String> v = null;
 

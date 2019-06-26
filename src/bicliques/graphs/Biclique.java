@@ -138,6 +138,7 @@ implements Comparable<Biclique<V, E>> {
 			return Collections.emptySet();
 		Iterator<Vertex<V>> iter = vertices.iterator();
 		Vertex<V> vertex = iter.next();
+		@SuppressWarnings("unchecked")
 		Set<Vertex<V>> result = (Set<Vertex<V>>) vertex.getNeighbours();
 		while (iter.hasNext())
 			result.retainAll(iter.next().getNeighbours());

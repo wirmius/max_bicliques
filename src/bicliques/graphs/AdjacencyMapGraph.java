@@ -69,7 +69,8 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
 
         @Override
         public String toString() {
-            return "{EDGE:" + elem.toString() + ";" + u.toString() + ":" + v.toString() + "}";
+//            return "{EDGE:" + elem.toString() + ";" + u.toString() + ":" + v.toString() + "}";
+            return "(" + u.getElem().toString() + ", " + v.getElem().toString() + ")";
         }
 
         @Override
@@ -111,7 +112,8 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
 
         @Override
         public String toString() {
-            return "{VER:" + elem.toString() + ";" + ((Integer) incoming.size()).toString() + ":" + ((Integer) outgoing.size()).toString() + "}";
+//            return "{VER:" + elem.toString() + ";" + ((Integer) incoming.size()).toString() + ":" + ((Integer) outgoing.size()).toString() + "}";
+            return elem.toString();
         }
 
 		@Override
@@ -126,7 +128,7 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
 			for (AdjacencyMapEdge<E> edge : retset) {
 			    vertret.add((Vertex<V>)edge.opposite(this));
             }
-
+			
 			return vertret;
 		}
 
@@ -188,7 +190,6 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
         // wire up the vertices
         this.vertices.get(v1).wireOutgoingEdge(e);
         this.vertices.get(v2).wireIncomingEdge(e);
-
 
         this.edges.put(edge, e);
     }
