@@ -36,7 +36,7 @@ public class MICA<V extends Comparable<? super V>, E extends Comparable<? super 
 		// empty graph?
 		if (graph.getVertices().size() == 0)
 			return Collections.emptySet();
-
+		
 		// c0:
 		// vertices -> set of star bicliques covering edges of graph
 		// star bicliques are extended to maximal bicliques
@@ -46,6 +46,9 @@ public class MICA<V extends Comparable<? super V>, E extends Comparable<? super 
 			if (!starExtended.isAbsorbedOf(c0))
 				c0.add(starExtended);
 		}
+		
+		// TODO
+		System.out.println("c0 = " + c0);
 		
 		// c collects max. bicliques
 		Set<Biclique<V, E>> c = new TreeSet<>();

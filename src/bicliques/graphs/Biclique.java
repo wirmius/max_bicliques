@@ -68,8 +68,12 @@ implements Comparable<Biclique<V, E>> {
 	 * @param vertices Generating set of vertices.
 	 */
 	public Biclique(Graph<V, E> graph, Set<Vertex<V>> vertices) {
+		System.out.println("vertices = " + vertices);
 		Set<Vertex<V>> first = new TreeSet<>(gamma(vertices));
+		System.out.println("first = " + first);
 		Set<Vertex<V>> second = new TreeSet<>(gamma(first));
+		System.out.println("second = " + second);
+		System.out.println(compare(first, second));
 		if (compare(first, second) <= 0) {
 			left = first;
 			right = second;
@@ -125,7 +129,7 @@ implements Comparable<Biclique<V, E>> {
 			return Collections.emptySet();
 		Iterator<Vertex<V>> iter = vertices.iterator();
 		Vertex<V> vertex = iter.next();
-		Set<Vertex<V>> result = vertex.getNeighbours();
+		Set<Vertex<V>> result = (Set<Vertex<V>>) vertex.getNeighbours();
 		while (iter.hasNext())
 			result.retainAll(iter.next().getNeighbours());
 		return result;
