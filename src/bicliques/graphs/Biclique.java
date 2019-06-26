@@ -49,7 +49,7 @@ implements Comparable<Biclique<V, E>> {
 	 * Constructs a biclique on two disjoint sets of vertices.
 	 * Tests if the two given sets are disjoint, otherwise an exception is thrown.
 	 * @param graph Related graph.
-	 * @param vertices One partition of vertices of the two.
+	 * @param left One partition of vertices of the two.
 	 */
 	public Biclique(Graph<V, E> graph, Set<Vertex<V>> left, Set<Vertex<V>> right) {
 		Set<Vertex<V>> intersection = new TreeSet<>(left);
@@ -88,6 +88,19 @@ implements Comparable<Biclique<V, E>> {
 	public Biclique(Graph<V, E> graph, Graph.Vertex<V> vertex) {
 		this(graph, Collections.singleton(vertex));
 	}
+
+
+	/**
+	 * Constructs a biclique containing just the two vertexes. Usefull for constructing the initial biclique
+	 * set.
+	 * @param graph Related graph.
+	 * @param v1 One vertex.
+	 * @param v2 The other vertex.
+	 */
+	public  Biclique(Graph<V, E> graph, Graph.Vertex<V> v1, Graph.Vertex<V> v2)
+	{
+		this(graph, Collections.singleton(v1), Collections.singleton(v2));
+	}
 	
 	/**
 	 * Gets graph.
@@ -125,7 +138,7 @@ implements Comparable<Biclique<V, E>> {
 			return Collections.emptySet();
 		Iterator<Vertex<V>> iter = vertices.iterator();
 		Vertex<V> vertex = iter.next();
-		Set<Vertex<V>> result = vertex.getNeighbours();
+		Set<Vertex<V>> result = (Set<Vertex<V>>)vertex.getNeighbours();
 		while (iter.hasNext())
 			result.retainAll(iter.next().getNeighbours());
 		return result;
