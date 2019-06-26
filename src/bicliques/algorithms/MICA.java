@@ -53,27 +53,23 @@ public class MICA<V extends Comparable<? super V>, E extends Comparable<? super 
 		
 		// n0 collects new max. bicliques in actual stage
 		Set<Biclique<V, E>> n0;
-/*		
+		
 		do {
 			n0 = new TreeSet<>();
-			for (<Biclique<V, E> elem : w0)
-				for (<Biclique<V, E> star : c0)
-					if (!elem.equals(star)) {
-						Set<Set<String>> cons = mba.consensus(elem, star);
-						Set<<Biclique<V, E>> cons = 
-						for (Set<String> con : cons) 
-							if (!mba.absorbs(c, con) && !mba.absorbs(n0, con)) {
-								Set<String> x = mba.gamma(con);
-								Set<String> y = mba.gamma(x);
-								n0.add(comp.compare(x, y) <= 0 ? x : y);
-							}
+			for (Biclique<V, E> bic : w0)
+				for (Biclique<V, E> starExtended : c0)
+					if (!bic.equals(starExtended)) {
+						Set<Biclique<V, E>> cons = bic.consensus(starExtended);
+						for (Biclique<V, E> con : cons)
+							if (!con.isAbsorbedOf(c) && !con.isAbsorbedOf(n0))
+								n0.add(con);
 					}
 			w0 = new TreeSet<>();
 			w0.addAll(n0);
 			c.addAll(n0);
 			
 		} while (!n0.isEmpty());
-*/		
+		
 		return c;
 	}
 	

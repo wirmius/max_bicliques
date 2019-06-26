@@ -11,7 +11,8 @@ import java.util.TreeSet;
 import bicliques.graphs.Graph.Vertex;
 
 /**
- * Class implements a complete bipartite graph (biclique).
+ * Class implements a complete bipartite graph (biclique)
+ * with methods for computing maximal bicliques.
  * @author Roland Koppenberger
  * @version 1.0, June 26th 2019.
  */
