@@ -1,4 +1,5 @@
-package bicliques.graphs;
+package bicliques.algorithms;
+
 
 /**
  * MBEA Algorithm
@@ -9,19 +10,23 @@ package bicliques.graphs;
  
 
 import java.util.ArrayList;
+import bicliques.graphs.*;
+import java.util.HashMap;
 import java.util.HashSet;
-import javafx.util.Pair;
+import java.util.Map;
+import bicliques.graphs.Biclique;
+import bicliques.graphs.VertexSet;
 
 
 
 public class Mbea <V extends Comparable<? super V>, E extends Comparable<? super E>>  {
     private boolean found = false;
-    private ArrayList<Biclique> maximalBiclique;
-    private HashSet<Pair<Integer,Integer>> vertexSet = new HashSet<>();
+    private ArrayList<Biclique> maxiBiclique;
+    private HashSet<Map<Integer,Integer>> vertexSet = new HashSet<>();
 	private boolean isMaximal;
+	
 
-
-    private void bicliqueFindimP(VertexSet mL, VertexSet mR, VertexSet mP, VertexSet mQ)
+    private void bicliqueFind(VertexSet mL, VertexSet mR, VertexSet mP, VertexSet mQ)
     {
         VertexSet L = new VertexSet(mL.getSetV());
         VertexSet R = new VertexSet(mR.getSetV());
@@ -58,14 +63,14 @@ public class Mbea <V extends Comparable<? super V>, E extends Comparable<? super
             for(int j=0;j<Q.getSize();j++)
             {
                 Vertex v = Q.getVertex(j);
-                int numLprimeNeighbours = v.numberOfNeighboursOfVInSet(Lprime.getSetV());
+                int NumLeftPrimeNeigh = v.numberOfNeighboursOfVInSet(Lprime.getSetV());
 
-                if(numLprimeNeighbours == Lprime.getSize())
+                if(NumLeftPrimeNeigh == Lprime.getSize())
                 {
                     isMaximal = false;
                     break;
                 }
-                else if (numLprimeNeighbours > 0)
+                else if (NumLeftPrimeNeigh > 0)
                 {
                     Qprime.addVertex(v);
                 }
@@ -79,14 +84,14 @@ public class Mbea <V extends Comparable<? super V>, E extends Comparable<? super
                     if(v.isEqual(x)) // doubt equals
                         continue;
 
-                    int numLprimeNeighbours = v.numberOfNeighboursOfVInSet(Lprime.getSetV());
-                    if(numLprimeNeighbours == Lprime.getSize()) {
+                    int NumLeftPrimeNeigh = v.numberOfNeighboursOfVInSet(Lprime.getSetV());
+                    if(NumLeftPrimeNeigh == Lprime.getSize()) {
                         Rprime.addVertex(v);
-                        int numoverlineLprimeneighbours = v.numberOfNeighboursOfVInSet(twiceLprime.getSetV());
-                        if(numoverlineLprimeneighbours == 0)
+                        int NumOverlineLeftprimeNeigh = v.numberOfNeighboursOfVInSet(twiceLprime.getSetV());
+                        if(NumOverlineLeftprimeNeigh == 0)
                             C.addVertex(v);
                     }
-                    else if(numLprimeNeighbours > 0)
+                    else if(NumLeftPrimeNeigh > 0)
                         Pprime.addVertex(v);
                 }
 
@@ -97,7 +102,7 @@ public class Mbea <V extends Comparable<? super V>, E extends Comparable<? super
                 {
                     for(Vertex v2:bcq.getRightNodes())
                     {
-                        Pair<Integer,Integer> pr = new Pair<>(v1.getLabel(),v2.getLabel());
+                        Map<Integer,Integer> pr = new HashMap<>(v1.getLabel(),v2.getLabel());
                         if(vertexSet.contains(pr)){
                             isPresent++;
                         }
@@ -108,10 +113,10 @@ public class Mbea <V extends Comparable<? super V>, E extends Comparable<? super
                 }
 
                 if(isPresent!=(bcq.getLeftNodes().size()*bcq.getRightNodes().size()))
-                    maximalBiclique.add(bcq);
+                    maxiBiclique.add(bcq);
 
                 if(!Pprime.isSetEmpty()){
-                    bicliqueFindimP(Lprime,Rprime,Pprime,Qprime);
+                    bicliqueFind(Lprime,Rprime,Pprime,Qprime);
                     }
             }
 
@@ -128,27 +133,8 @@ public class Mbea <V extends Comparable<? super V>, E extends Comparable<? super
     int getNumBicliques()
     {
         if(found)
-            return maximalBiclique.size();
+            return maxiBiclique.size();
         return 0;
     }
 
-    String toStringMbea()
-    {
-
-
-        if(found)
-        {
-            String result = "";
-            for(int i=0;i<maximalBiclique.size();i++)
-            {
-                Biclique b = maximalBiclique.get(i);
-                result += b.toStringBiclique();
-                result += "\n";
-            }
-            return result;
-        }
-        else
-            return null;
-
-    }
-}
+ }

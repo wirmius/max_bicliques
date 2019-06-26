@@ -1,16 +1,16 @@
 package bicliques.graphs;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Bicliques
  *
  */
 public class Biclique {
-    boolean isMaximal;
+    public boolean isMaximal;
 	private List<Vertex> leftNodes;
 	private List<Vertex> rightNodes;
-    Biclique(List<Vertex> leftV, List<Vertex> rightV)
+    public Biclique(List<Vertex> leftV, List<Vertex> rightV)
     {
         leftNodes = leftV;
         rightNodes = rightV;
@@ -31,7 +31,7 @@ public class Biclique {
         }
 
       }
-    
+        
     public List<Vertex> getLeftNodes() {
         return leftNodes;
     }
@@ -43,6 +43,11 @@ public class Biclique {
     public boolean isMaximal() {
         return isMaximal;
     }
+
+	public String toStringBiclique() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
     
 }
