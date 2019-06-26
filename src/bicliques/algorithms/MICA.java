@@ -5,6 +5,7 @@ package bicliques.algorithms;
 
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Collections;
 import java.util.Map.Entry;
 
 import bicliques.graphs.Biclique;
@@ -31,6 +32,20 @@ public class MICA<V extends Comparable<? super V>, E extends Comparable<? super 
 	
 	@Override
 	public Set<Biclique<V, E>> findMaxBicliques(Graph<V, E> graph) {
+				
+		// empty graph?
+		if (graph.getVertices().size() == 0)
+			return Collections.emptySet();
+
+		System.out.println(graph.getVertexCount());
+		System.out.println(graph.getVertices().size());
+		System.out.println(graph.getVertices().entrySet().size());
+		
+		for (Entry<V, ? extends Vertex<V>> entry : graph.getVertices().entrySet())
+			System.out.println(entry);
+		
+		if (true)
+			return null;
 		
 		// c0:
 		// vertices -> set of star bicliques covering edges of graph
