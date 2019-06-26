@@ -108,6 +108,12 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
         public String toString() {
             return "{VER:" + elem.toString() + ";" + ((Integer) incoming.size()).toString() + ":" + ((Integer) outgoing.size()).toString() + "}";
         }
+
+		@Override
+		public Set<AdjacencyMapVertex<V>> getNeighbours() {
+			// TODO Auto-generated method stub
+			return null;
+		}
     }
 
     @Override

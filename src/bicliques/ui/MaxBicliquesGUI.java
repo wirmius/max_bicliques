@@ -164,7 +164,7 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 	private boolean isComputing = false;
 	
 	// algorithm
-	private static MaximalBicliquesAlgorithm mba;
+	private static MaximalBicliquesAlgorithm<String, Integer> mba;
 	
 	// computation thread
 	private Computation computation;

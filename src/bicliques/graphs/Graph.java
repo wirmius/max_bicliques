@@ -10,6 +10,7 @@ public interface Graph<V extends Comparable<? super V>, E extends Comparable<? s
         void setElem(V elem);
         Set<? extends Edge> getOutgoingEdges();
         Set<? extends Edge> getIncomingEdges();
+        Set<? extends Vertex<V>> getNeighbours();
     }
 
     interface Edge<E> {

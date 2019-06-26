@@ -13,12 +13,12 @@ import bicliques.graphs.Graph;
  * @author Roland Koppenberger
  * @version 1.0, June 24th 2019.
  */
-public interface MaximalBicliquesAlgorithm {
+public interface MaximalBicliquesAlgorithm<V extends Comparable<? super V>, E extends Comparable<? super E>> {
 
 	/**
 	 * Computes all maximal bicliques of the given graph.
 	 * @param graph Graph to examine.
 	 * @return Set of maximal bicliques of graph.
 	 */
-	Set<Biclique> findMaxBicliques(Graph graph);
+	Set<Biclique> findMaxBicliques(Graph<V, E> graph);
 }
