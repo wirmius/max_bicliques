@@ -398,9 +398,15 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		algorithmLEX = new JRadioButtonMenuItem(LBL_LEX, false);
 		algorithmLEX.addActionListener(this);
 		algorithmLEX.setActionCommand(ACT_MENU_ALGORITHM_LEX);
+		// TODO
+		algorithmLEX.setEnabled(false);
+		// TODO
 		algorithmMBEA = new JRadioButtonMenuItem(LBL_MBEA, false);
 		algorithmMBEA.addActionListener(this);
 		algorithmMBEA.setActionCommand(ACT_MENU_ALGORITHM_MBEA);
+		// TODO
+		algorithmMBEA.setEnabled(false);
+		// TODO
 		algorithmMICA = new JRadioButtonMenuItem(LBL_MICA, false);
 		algorithmMICA.addActionListener(this);
 		algorithmMICA.setActionCommand(ACT_MENU_ALGORITHM_MICA);
@@ -520,13 +526,15 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 			
 		case ACT_MENU_ALGORITHM_LEX:
 			lblAlgorithm.setText(LBL_ALGORITHM_CAPTION + LBL_LEX);
-			mba = new MICA(); // TODO
+			// TODO
+			// mba = new LEX();
 			setAlgorithmChosen();
 			return;
 			
 		case ACT_MENU_ALGORITHM_MBEA:
 			lblAlgorithm.setText(LBL_ALGORITHM_CAPTION + LBL_MBEA);
-			mba = new MICA(); // TODO
+			// TODO
+			// mba = new MBEA();
 			setAlgorithmChosen();
 			return;
 			
