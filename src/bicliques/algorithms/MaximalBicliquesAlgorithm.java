@@ -20,5 +20,5 @@ public interface MaximalBicliquesAlgorithm<V extends Comparable<? super V>, E ex
 	 * @param graph Graph to examine.
 	 * @return Set of maximal bicliques of graph.
 	 */
-	Set<Biclique> findMaxBicliques(Graph<V, E> graph);
+	Set<Biclique<V, E>> findMaxBicliques(Graph<V, E> graph);
 }

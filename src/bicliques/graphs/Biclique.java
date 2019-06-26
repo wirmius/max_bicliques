@@ -210,6 +210,11 @@ implements Comparable<Biclique<V, E>> {
 		return new Biclique<>(graph, gamma(left));
 	}
 	
+	@Override
+	public String toString() {
+		return "TODO";
+	}
+	
 	/**
 	 * Compares two sets X, Y of vertices.<p>
 	 * It holds: {@code X < Y <=>}
