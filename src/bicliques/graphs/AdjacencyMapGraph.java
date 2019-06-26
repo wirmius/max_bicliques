@@ -28,7 +28,7 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
 
     }
 
-    public class AdjacencyMapEdge<E> implements Graph.Edge<E> {
+    public class AdjacencyMapEdge<E extends Comparable<? super E>> implements Graph.Edge<E>, Comparable<AdjacencyMapEdge<E>> {
         private E elem;  // Weight, name, ...
         private AdjacencyMapVertex<V> u, v;
 
@@ -38,13 +38,13 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
             this.elem = elem;
         }
 
-        public AdjacencyMapVertex opposite(AdjacencyMapVertex v) {
+        public AdjacencyMapVertex<V> opposite(AdjacencyMapVertex v) {
             assert this.v == v || this.u == v;
             if (this.v == v) {
                 return this.u;
             } else if (this.u == v) {
                 return this.v;
-            } else return null;
+            } else return null; // TODO: change to throw an error
         }
 
         @Override
@@ -71,9 +71,14 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
         public String toString() {
             return "{EDGE:" + elem.toString() + ";" + u.toString() + ":" + v.toString() + "}";
         }
+
+        @Override
+        public int compareTo(AdjacencyMapEdge<E> eAdjacencyMapEdge) {
+            return this.getElem().compareTo(eAdjacencyMapEdge.getElem());
+        }
     }
 
-    public class AdjacencyMapVertex<V> implements Graph.Vertex<V> {
+    public class AdjacencyMapVertex<V extends Comparable<? super V>> implements Graph.Vertex<V>, Comparable<AdjacencyMapVertex<V>> {
         private V elem;
         private Set<AdjacencyMapEdge<E>> outgoing, incoming;
 
@@ -111,10 +116,24 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
 
 		@Override
 		public Set<Vertex<V>> getNeighbours() {
-			// TODO Auto-generated method stub
-			return null;
+			Set<AdjacencyMapEdge<E>> sin = this.getIncomingEdges();
+			Set<AdjacencyMapEdge<E>> sout = this.getOutgoingEdges();
+
+			Set<AdjacencyMapEdge<E>> retset = new TreeSet<>(sin);
+			retset.addAll(sout);
+
+			Set<Vertex<V>> vertret = new TreeSet<>();
+			for (AdjacencyMapEdge<E> edge : retset) {
+			    vertret.add((Vertex<V>)edge.opposite(this));
+            }
+
+			return vertret;
 		}
 
+        @Override
+        public int compareTo(AdjacencyMapVertex<V> vAdjacencyMapVertex) {
+            return this.getElem().compareTo(vAdjacencyMapVertex.getElem());
+        }
     }
 
     @Override
@@ -149,7 +168,7 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
     public void addEdge(E edge, V v1, V v2) {
         assert this.edges.get(edge) == null;
         assert this.vertices.get(v1) == null;
-        assert this.vertices.get(v2) == null;
+        assert this.vertices.get(v2) == null; // replace with throws
 
         this.addVertex(v1);
         this.addVertex(v2);

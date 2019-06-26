@@ -12,7 +12,7 @@ public interface Graph<V extends Comparable<? super V>, E extends Comparable<? s
         void setElem(V elem);
         Set<? extends Edge> getOutgoingEdges();
         Set<? extends Edge> getIncomingEdges();
-        Set<Vertex<V>> getNeighbours();
+        Set<? extends Vertex> getNeighbours();
     }
 
     interface Edge<E> {
@@ -21,6 +21,7 @@ public interface Graph<V extends Comparable<? super V>, E extends Comparable<? s
         Vertex getStart();
         Vertex getEnd();
     }
+
 
     Map<V, ? extends Vertex<V>> getVertices();
     int getVertexCount();
