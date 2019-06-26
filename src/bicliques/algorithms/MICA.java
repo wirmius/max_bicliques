@@ -31,7 +31,7 @@ public class MICA<V extends Comparable<? super V>, E extends Comparable<? super 
 	
 	@Override
 	public Set<Biclique<V, E>> findMaxBicliques(Graph<V, E> graph) {
-
+		
 		// c0:
 		// vertices -> set of star bicliques covering edges of graph
 		// star bicliques are extended to maximal bicliques
