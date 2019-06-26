@@ -47,9 +47,6 @@ public class MICA<V extends Comparable<? super V>, E extends Comparable<? super 
 				c0.add(starExtended);
 		}
 		
-		// TODO
-		System.out.println("c0 = " + c0);
-		
 		// c collects max. bicliques
 		Set<Biclique<V, E>> c = new TreeSet<>();
 		c.addAll(c0);

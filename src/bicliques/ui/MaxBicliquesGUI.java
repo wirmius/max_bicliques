@@ -13,9 +13,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Set;
 
@@ -45,6 +47,7 @@ import bicliques.algorithms.MaximalBicliquesAlgorithm;
 import bicliques.graphs.Biclique;
 import bicliques.graphs.Graph;
 import bicliques.graphs.GraphVendingMachine;
+import bicliques.graphs.Graph.Vertex;
 
 /**
  * GUI for computing the set of maximal bicliques of a graph.
@@ -512,7 +515,6 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 			// open dialog
 			if (fileChooser.showOpenDialog(frame) != JFileChooser.APPROVE_OPTION)
 				return;
-			
 			// try to load graph
 			graph = loadGraph(fileChooser.getSelectedFile());
 			graphLoaded = (graph != null);
@@ -534,12 +536,9 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 			// save dialog
 			if (fileChooser.showSaveDialog(frame) != JFileChooser.APPROVE_OPTION)
 				return;
-			
-			// get selected file
-			File file = fileChooser.getSelectedFile();
-			
-			// TODO outputComputed?
-			
+			// try to save bicliques
+			if (setOfMaxBicliques != null)
+				saveBicliques(fileChooser.getSelectedFile(), setOfMaxBicliques);
 			return;
 			
 		case ACT_MENU_ALGORITHM_LEX:
@@ -612,7 +611,7 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 	 * <li>Two consecutive lines build an edge.
 	 * <li>A remaining single vertex is not allowed.
 	 * </ul> 
-	 * @param graph Loaded graph.
+	 * @param file File to load.
 	 * @return True if graph is loaded, false otherwise.
 	 */
 	private Graph<String, Integer> loadGraph(File file) {
@@ -675,6 +674,41 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		}
 		
 		return graph;
+	}
+	
+	/**
+	 * Saves an set of bicliques in a text file.<p>
+	 * <b>Fileformat:</b>
+	 * <ul>
+	 * <li>Each line represents a vertex, the content is the vertex name. 
+	 * <li>After each partition of vertices an empty line is placed.
+	 * </ul> 
+	 * @param file File to save.
+	 * @param setOfMaxBicliques Set of bicliques to save.
+	 */
+	private void saveBicliques(File file, Set<Biclique<String, Integer>> setOfMaxBicliques) {
+		
+	    try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+	    	for (Biclique<String, Integer> bic : setOfMaxBicliques) {
+	    		// write left partition of biclique
+	    		for (Vertex<String> v : bic.getLeft()) {
+	    			writer.write(v.getElem());
+		    		writer.newLine();
+	    		}
+	    		writer.newLine();
+	    		// write right partition of biclique
+	    		for (Vertex<String> v : bic.getRight()) {
+	    			writer.write(v.getElem());
+		    		writer.newLine();
+	    		}
+	    		writer.newLine();
+	    	}
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(frame,
+					"I/O-Error: " + e.getMessage() + ".",
+					"Bicliques could not be saved",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	/**
