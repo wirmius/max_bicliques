@@ -3,16 +3,9 @@
  */
 package bicliques.algorithms;
 
-import java.util.Map.Entry;
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.Set;
-import java.util.TreeSet;
-
 import bicliques.graphs.Biclique;
 import bicliques.graphs.Graph;
-import bicliques.graphs.Graph.Edge;
-import bicliques.graphs.Graph.Vertex;
 
 /**
  * Implements MICA algorithm for finding all
