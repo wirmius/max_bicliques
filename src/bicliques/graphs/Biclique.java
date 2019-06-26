@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
-import bicliques.algorithms.MICA.BiCompare;
 import bicliques.graphs.Graph.Vertex;
 
 /**
