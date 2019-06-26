@@ -3,6 +3,8 @@ package bicliques.graphs;
 import java.util.Map;
 import java.util.Set;
 
+import bicliques.graphs.Graph.Vertex;
+
 public interface Graph<V extends Comparable<? super V>, E extends Comparable<? super E>> {
 
     interface Vertex<V> {
@@ -10,7 +12,7 @@ public interface Graph<V extends Comparable<? super V>, E extends Comparable<? s
         void setElem(V elem);
         Set<? extends Edge> getOutgoingEdges();
         Set<? extends Edge> getIncomingEdges();
-        Set<? extends Vertex<V>> getNeighbours();
+        Set<Vertex<V>> getNeighbours();
     }
 
     interface Edge<E> {

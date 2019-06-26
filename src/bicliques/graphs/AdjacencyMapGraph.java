@@ -110,10 +110,11 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
         }
 
 		@Override
-		public Set<AdjacencyMapVertex<V>> getNeighbours() {
+		public Set<Vertex<V>> getNeighbours() {
 			// TODO Auto-generated method stub
 			return null;
 		}
+
     }
 
     @Override
