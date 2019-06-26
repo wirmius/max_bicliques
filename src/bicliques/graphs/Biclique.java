@@ -166,25 +166,25 @@ implements Comparable<Biclique<V, E>> {
 		Set<Biclique<V, E>> cons = new TreeSet<>();
 		Set<Vertex<V>> x;
 		
-		// X1 cap X2
+		// X1 intersection X2
 		x = new TreeSet<>(this.getLeft());
 		x.retainAll(other.getLeft());
 		if (!x.isEmpty())
 			cons.add(new Biclique<V, E>(graph, x));
 		
-		// X1 cap Y2
+		// X1 intersection Y2
 		x = new TreeSet<>(this.getLeft());
 		x.retainAll(other.getRight());
 		if (!x.isEmpty())
 			cons.add(new Biclique<V, E>(graph, x));
 		
-		// Y1 cap X2
+		// Y1 intersection X2
 		x = new TreeSet<>(this.getRight());
 		x.retainAll(other.getLeft());
 		if (!x.isEmpty())
 			cons.add(new Biclique<V, E>(graph, x));
 		
-		// Y1 cap Y2
+		// Y1 intersection Y2
 		x = new TreeSet<>(this.getRight());
 		x.retainAll(other.getRight());
 		if (!x.isEmpty())
@@ -204,8 +204,7 @@ implements Comparable<Biclique<V, E>> {
 	
 	@Override
 	public String toString() {
-		// TODO
-		return "TODO";
+		return "(" + left + ", " + right + ")";
 	}
 	
 	/**
