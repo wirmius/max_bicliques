@@ -5,11 +5,11 @@ package bicliques.algorithms;
 
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Collections;
 import java.util.Map.Entry;
 
 import bicliques.graphs.Biclique;
 import bicliques.graphs.Graph;
-import bicliques.graphs.GraphVendingMachine;
 import bicliques.graphs.Graph.Vertex;
 
 /**
@@ -32,7 +32,21 @@ public class MICA<V extends Comparable<? super V>, E extends Comparable<? super 
 	
 	@Override
 	public Set<Biclique<V, E>> findMaxBicliques(Graph<V, E> graph) {
+				
+		// empty graph?
+		if (graph.getVertices().size() == 0)
+			return Collections.emptySet();
 
+		System.out.println(graph.getVertexCount());
+		System.out.println(graph.getVertices().size());
+		System.out.println(graph.getVertices().entrySet().size());
+		
+		for (Entry<V, ? extends Vertex<V>> entry : graph.getVertices().entrySet())
+			System.out.println(entry);
+		
+		if (true)
+			return null;
+		
 		// c0:
 		// vertices -> set of star bicliques covering edges of graph
 		// star bicliques are extended to maximal bicliques
@@ -55,19 +69,29 @@ public class MICA<V extends Comparable<? super V>, E extends Comparable<? super 
 		Set<Biclique<V, E>> n0;
 		
 		do {
+			// clear newly found max. bicliques
 			n0 = new TreeSet<>();
+			// for every two bicliques,
+			// one from working set w0, and one from extended stars set c0
 			for (Biclique<V, E> bic : w0)
 				for (Biclique<V, E> starExtended : c0)
 					if (!bic.equals(starExtended)) {
+						// compute set of extended consensuses and add them to n0
+						// if they are not absorbed by bicliques in c or n0
 						Set<Biclique<V, E>> cons = bic.consensus(starExtended);
 						for (Biclique<V, E> con : cons)
 							if (!con.isAbsorbedOf(c) && !con.isAbsorbedOf(n0))
 								n0.add(con);
 					}
+			
+			// next working set consists of newly found maximal bicliques
 			w0 = new TreeSet<>();
 			w0.addAll(n0);
+			
+			// add newly found max. bicliques
 			c.addAll(n0);
 			
+			// repeat while new bicliques have been found
 		} while (!n0.isEmpty());
 		
 		return c;

@@ -14,7 +14,7 @@ import javafx.util.Pair;
 
 
 
-public class Mbea  {
+public class Mbea <V extends Comparable<? super V>, E extends Comparable<? super E>>  {
     private boolean found = false;
     private ArrayList<Biclique> maximalBiclique;
     private HashSet<Pair<Integer,Integer>> vertexSet = new HashSet<>();

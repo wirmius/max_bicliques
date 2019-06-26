@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Set;
+
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -38,6 +40,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import bicliques.algorithms.MICA;
 import bicliques.algorithms.MaximalBicliquesAlgorithm;
+import bicliques.graphs.Biclique;
 import bicliques.graphs.Graph;
 import bicliques.graphs.GraphVendingMachine;
 
@@ -65,17 +68,29 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		 * Computes set of maximal bicliques.
 		 */
 		public void run() {
-			if (mba != null)
-				// TODO: return value Biclique[]
-				mba.findMaxBicliques(graph);
+			if (mba == null) {
+				txtOutput.setText("(no algorithm object for computation");
+				return;
+			}
+			setOfMaxBicliques = mba.findMaxBicliques(graph);
 			if (isInterrupted())
 				return;
 			btnCompute.setEnabled(false);
 			isComputing = false;
 			
-			// TODO
-			txtOutput.setText("set of maximal bicliques computed");
-			// TODO
+			// output
+			int numBicliques = setOfMaxBicliques.size();
+			String txt = "Set of ";
+			txt += (numBicliques == 1 ? "1" : numBicliques);
+			txt += " maximal biclique";
+			txt += (numBicliques == 1 ? "" : "s");
+			txt += " computed\n\n";
+			if (numBicliques < 20)
+				txt += setOfMaxBicliques;
+			else
+				txt += "(too many bicliques to show)";
+			txt += "\n";
+			txtOutput.setText(txt);
 			
 			menuInput.setEnabled(true);
 			menuOutput.setEnabled(true);
@@ -159,6 +174,7 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 	private JRadioButtonMenuItem algorithmMBEA;
 	private JRadioButtonMenuItem algorithmMICA;
 	
+	// flags
 	private boolean graphLoaded = false;
 	private boolean algorithmChosen = false;
 	private boolean isComputing = false;
@@ -168,12 +184,15 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 	
 	// computation thread
 	private Computation computation;
-	
+
 	// file chooser
 	private JFileChooser fileChooser;
 	
 	// graph
 	private Graph<String, Integer> graph;
+
+	// set of maximal bicliques
+	private Set<Biclique<String, Integer>> setOfMaxBicliques;
 	
 	/**
 	 * Constructs GUI.
