@@ -137,7 +137,7 @@ implements Comparable<Biclique<V, E>> {
 	 * @param setOfBicliques Set of bicliques to test absorption.
 	 * @return True if biclique is absorbed, false otherwise.
 	 */
-	public boolean isAbsorbed(Set<Biclique<V, E>> setOfBicliques) {
+	public boolean isAbsorbedOf(Set<Biclique<V, E>> setOfBicliques) {
 		for (Biclique<V, E> bic : setOfBicliques) {
 			if (bic.getLeft().containsAll(left) && bic.getRight().containsAll(right))
 				return true;
@@ -147,59 +147,54 @@ implements Comparable<Biclique<V, E>> {
 		return false;
 	}
 	
-/*
- 	public Set<MyBiclique<V, E>> consensus(MyBiclique<V, E> bic1, MyBiclique<V, E> bic2) {
+	/**
+	 * Computes the consensus of two bicliques.<p>
+	 * From two bicliques {@code (X1, Y1)} and {@code (X2, Y2)} the consensus consists of
+	 * the following bicliques (non empty intersection provided):
+	 * <ul>
+	 * <li>{@code (X1 intersection X2, Y1 union Y2)},
+	 * <li>{@code (X1 intersection Y2, Y1 union X2)},
+	 * <li>{@code (Y1 intersection X2, X1 union Y2)},
+	 * <li>{@code (Y1 intersection Y2, X1 union X2)}.
+	 * </ul>
+	 * @param other The other biclique.
+	 * @return Consensus set of (0 to 4) maximal bicliques.
+	 */
+ 	public Set<Biclique<V, E>> consensus(Biclique<V, E> other) {
  
-		
-		Set<MyBiclique<V, E>> cons = new TreeSet<>();
-
+		Set<Biclique<V, E>> cons = new TreeSet<>();
 		Set<Vertex<V>> x;
-		Set<Vertex<V>> y;
 		
 		// X1 cap X2
-		x = new TreeSet<>(bic1.getLeft());
-		x.retainAll(bic2.getLeft());
+		x = new TreeSet<>(this.getLeft());
+		x.retainAll(other.getLeft());
 		if (!x.isEmpty())
-			cons.add(new MyBiclique<V, E>(graph, x));
-		
-		// TODO
+			cons.add(new Biclique<V, E>(graph, x));
 		
 		// X1 cap Y2
-		x = new TreeSet<>(x1);
-		x.retainAll(y2);
-		if (!x.isEmpty()) {
-			// Y1 cup X2
-			y = new TreeSet<>(y1);
-			y.addAll(x2);
-			cons.add(comp.compare(x, y) <= 0 ? x : y);
-		}
+		x = new TreeSet<>(this.getLeft());
+		x.retainAll(other.getRight());
+		if (!x.isEmpty())
+			cons.add(new Biclique<V, E>(graph, x));
 		
 		// Y1 cap X2
-		x = new TreeSet<>(y1);
-		x.retainAll(x2);
-		if (!x.isEmpty()) {
-			// X1 cup Y2
-			y = new TreeSet<>(x1);
-			y.addAll(y2);
-			cons.add(comp.compare(x, y) <= 0 ? x : y);
-		}
+		x = new TreeSet<>(this.getRight());
+		x.retainAll(other.getLeft());
+		if (!x.isEmpty())
+			cons.add(new Biclique<V, E>(graph, x));
 		
 		// Y1 cap Y2
-		x = new TreeSet<>(y1);
-		x.retainAll(y2);
-		if (!x.isEmpty()) {
-			// X1 cup X2
-			y = new TreeSet<>(x1);
-			y.addAll(x2);
-			cons.add(comp.compare(x, y) <= 0 ? x : y);
-		}
+		x = new TreeSet<>(this.getRight());
+		x.retainAll(other.getRight());
+		if (!x.isEmpty())
+			cons.add(new Biclique<V, E>(graph, x));
 		
 		return cons;
 	}
-*/
 	
 	/**
 	 * Extends biclique to a maximal biclique.
+	 * (Could be done directly by creating a maximal biclique with a generation set.)
 	 * @return Maximal biclique.
 	 */
 	public Biclique<V, E> extendToMaximal() {
@@ -208,6 +203,7 @@ implements Comparable<Biclique<V, E>> {
 	
 	@Override
 	public String toString() {
+		// TODO
 		return "TODO";
 	}
 	
