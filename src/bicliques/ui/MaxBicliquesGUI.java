@@ -38,6 +38,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+
+import bicliques.algorithms.LEX;
 import bicliques.algorithms.MICA;
 import bicliques.algorithms.MaximalBicliquesAlgorithm;
 import bicliques.graphs.Biclique;
@@ -417,9 +419,6 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		algorithmLEX = new JRadioButtonMenuItem(LBL_LEX, false);
 		algorithmLEX.addActionListener(this);
 		algorithmLEX.setActionCommand(ACT_MENU_ALGORITHM_LEX);
-		// TODO
-		algorithmLEX.setEnabled(false);
-		// TODO
 		algorithmMBEA = new JRadioButtonMenuItem(LBL_MBEA, false);
 		algorithmMBEA.addActionListener(this);
 		algorithmMBEA.setActionCommand(ACT_MENU_ALGORITHM_MBEA);
@@ -545,8 +544,7 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 			
 		case ACT_MENU_ALGORITHM_LEX:
 			lblAlgorithm.setText(LBL_ALGORITHM_CAPTION + LBL_LEX);
-			// TODO
-			// mba = new LEX();
+			mba = new LEX();
 			setAlgorithmChosen();
 			return;
 			
