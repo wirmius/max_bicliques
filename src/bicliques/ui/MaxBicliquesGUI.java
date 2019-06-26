@@ -544,7 +544,7 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 			
 		case ACT_MENU_ALGORITHM_LEX:
 			lblAlgorithm.setText(LBL_ALGORITHM_CAPTION + LBL_LEX);
-			mba = new LEX();
+			mba = new LEX<>();
 			setAlgorithmChosen();
 			return;
 			
@@ -557,7 +557,7 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 			
 		case ACT_MENU_ALGORITHM_MICA:
 			lblAlgorithm.setText(LBL_ALGORITHM_CAPTION + LBL_MICA);
-			mba = new MICA();
+			mba = new MICA<>();
 			setAlgorithmChosen();
 			return;
 			

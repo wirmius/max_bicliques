@@ -69,8 +69,7 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
 
         @Override
         public String toString() {
-//            return "{EDGE:" + elem.toString() + ";" + u.toString() + ":" + v.toString() + "}";
-            return "(" + u.getElem().toString() + ", " + v.getElem().toString() + ")";
+            return "{EDGE:" + elem.toString() + ";" + u.toString() + ":" + v.toString() + "}";
         }
 
         @Override
@@ -112,8 +111,7 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
 
         @Override
         public String toString() {
-//            return "{VER:" + elem.toString() + ";" + ((Integer) incoming.size()).toString() + ":" + ((Integer) outgoing.size()).toString() + "}";
-            return elem.toString();
+            return "{VER:" + elem.toString() + ";" + ((Integer) incoming.size()).toString() + ":" + ((Integer) outgoing.size()).toString() + "}";
         }
 
 		@Override
@@ -139,7 +137,7 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
 
         protected void wireIncomingEdge(AdjacencyMapEdge<E> edge)
         {
-            this.incoming.add(edge);
+        	this.incoming.add(edge);
         }
 
         protected void wireOutgoingEdge(AdjacencyMapEdge<E> edge)
