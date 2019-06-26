@@ -74,10 +74,15 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		 */
 		public void run() {
 			if (mba == null) {
-				txtOutput.setText("(no algorithm object for computation");
+				setGUIafterComputationFailed("(no algorithm object for computation)");
 				return;
 			}
 			setOfMaxBicliques = mba.findMaxBicliques(graph);
+			if (setOfMaxBicliques == null) {
+				setGUIafterComputationFailed(LBL_NOT_COMPUTED);
+				return;
+			}
+			
 			if (isInterrupted())
 				return;
 			btnCompute.setEnabled(false);
@@ -323,75 +328,6 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		panel.add(inputPanel);
 		panel.add(outputPanel);
 		
-/*				
-		// input page start panel
-		JPanel inputStartPage = new JPanel(new BorderLayout());
-		inputStartPage.add(lblInput, BorderLayout.LINE_START);
-		inputStartPage.setPreferredSize(new Dimension(0, 25));
-		
-		// input panel for vertices U
-		JPanel inputPanelForU = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		inputPanelForU.add(new JLabel("U: "));
-		inputPanelForU.add(new JLabel("nodes from 1 to"));
-		inputPanelForU.add(txtMaxU);
-		
-		// input panel for vertices V
-		JPanel inputPanelForV = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		inputPanelForV.add(new JLabel("V: "));
-		inputPanelForV.add(new JLabel("nodes from"));
-		inputPanelForV.add(lblMinV);
-		inputPanelForV.add(new JLabel("to"));
-		inputPanelForV.add(txtMaxV);
-		
-		// input panel for vertices
-		JPanel inputPanelForVertices = new JPanel(new GridLayout(2,1));
-		inputPanelForVertices.add(inputPanelForU);
-		inputPanelForVertices.add(inputPanelForV);
-		
-		// input panel for edges
-		JPanel inputPanelForEdges = new JPanel(new BorderLayout());
-		inputPanelForEdges.add(new JLabel("  E: "), BorderLayout.LINE_START);
-		inputPanelForEdges.add(scrollPaneForEdges, BorderLayout.CENTER);
-		
-		// input panel for vertices and edges
-		JPanel inputPanelForVE = new JPanel(new BorderLayout());
-		inputPanelForVE.add(inputPanelForVertices, BorderLayout.PAGE_START);
-		inputPanelForVE.add(inputPanelForEdges, BorderLayout.CENTER);
-		
-		// input panel
-		JPanel inputPanel = new JPanel(new BorderLayout());
-		inputPanel.add(inputStartPage, BorderLayout.PAGE_START);
-		inputPanel.add(inputPanelForVE, BorderLayout.CENTER);
-		
-		// output page start panel
-		JPanel outputStartPage = new JPanel(new BorderLayout());
-		outputStartPage.add(lblOutput, BorderLayout.LINE_START);
-		outputStartPage.add(lblAlgorithm, BorderLayout.CENTER);
-		outputStartPage.add(btnCompute, BorderLayout.LINE_END);
-		outputStartPage.setPreferredSize(new Dimension(0, 25));
-		
-		// output page end panel
-		JPanel outputEndPage = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		outputEndPage.add(lblSize);
-		outputEndPage.setPreferredSize(new Dimension(0, 25));
-		
-		// output panel
-		JPanel outputPanel = new JPanel(new BorderLayout());
-		outputPanel.add(outputStartPage, BorderLayout.PAGE_START);
-		outputPanel.add(outputScrollPane, BorderLayout.CENTER);
-		outputPanel.add(outputEndPage, BorderLayout.PAGE_END);
-		
-		// create panel for input and output
-		JPanel inOut = new JPanel(new GridLayout(2, 1));
-		inOut.add(inputPanel);
-		inOut.add(outputPanel);
-		
-		// create panel
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.LINE_START);
-		panel.add(inOut, BorderLayout.CENTER);
-		panel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.LINE_END);
-*/		
 		/* =======================================================================================
 		 * 
 		 *   create menu
@@ -479,15 +415,6 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 			}
 		});
 		
-		// TODO
-/*
-		// add component listener for resizing event
-		frame.addComponentListener(new ComponentAdapter() {
-			public void componentResized(ComponentEvent e) {
-				showEcosystem();
-		    }			
-		});
-*/		
 		// set panel and menu into frame and show frame
 		frame.setJMenuBar(menu);
 		frame.setContentPane(panel);
@@ -544,20 +471,20 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		case ACT_MENU_ALGORITHM_LEX:
 			lblAlgorithm.setText(LBL_ALGORITHM_CAPTION + LBL_LEX);
 			mba = new LEX<>();
-			setAlgorithmChosen();
+			setGUIafterAlgorithmChosen();
 			return;
 			
 		case ACT_MENU_ALGORITHM_MBEA:
 			lblAlgorithm.setText(LBL_ALGORITHM_CAPTION + LBL_MBEA);
 			// TODO
 			// mba = new MBEA();
-			setAlgorithmChosen();
+			setGUIafterAlgorithmChosen();
 			return;
 			
 		case ACT_MENU_ALGORITHM_MICA:
 			lblAlgorithm.setText(LBL_ALGORITHM_CAPTION + LBL_MICA);
 			mba = new MICA<>();
-			setAlgorithmChosen();
+			setGUIafterAlgorithmChosen();
 			return;
 			
 		case ACT_MENU_HELP_DIALOG:
@@ -741,12 +668,26 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 	/**
 	 * Prepare GUI after algorithm has been chosen.
 	 */
-	private void setAlgorithmChosen() {
+	private void setGUIafterAlgorithmChosen() {
 		algorithmChosen = true;
 		if (graphLoaded)
 			btnCompute.setEnabled(true);
 		txtOutput.setText(LBL_NOT_COMPUTED);
 		menuOutput.setEnabled(false);
+	}
+
+	/**
+	 * Prepare GUI after computation failed.
+	 */
+	private void setGUIafterComputationFailed(String msg) {
+		btnCompute.setEnabled(false);
+		menuOutput.setEnabled(false);
+		isComputing = false;
+		txtOutput.setText(msg);
+		btnCompute.setText(LBL_COMPUTE);
+		menuInput.setEnabled(true);
+		menuAlgorithm.setEnabled(true);
+		btnCompute.setEnabled(true);
 	}
 
 	/**
