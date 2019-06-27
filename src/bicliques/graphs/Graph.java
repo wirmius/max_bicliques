@@ -30,4 +30,8 @@ public interface Graph<V extends Comparable<? super V>, E extends Comparable<? s
     void addVertex(V elem);
     void addEdge(E edge, V v1, V v2);
     void addEdge(E edge, Vertex<V> v1, Vertex<V> v2);
+    
+    // workaround for nicer outputs
+    String prettyPrintVertices();
+    String prettyPrintEdges();
 }

@@ -231,4 +231,37 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
         this.edges.put(edge, e);
     }
     
+    // nicer outputs for GUI
+    public String prettyPrintVertices() {
+    	String s = "[";
+    	if (vertices.size() > 0) {
+    		boolean first = true;
+    		for (Entry<V, AdjacencyMapVertex<V>> entry : vertices.entrySet())
+    			if (first) {
+    				first = false;
+    				s += entry.getValue();
+    			} else {
+    				s += ", " + entry.getValue();
+    			}
+    	}
+    	s += "]";
+		return s;
+    }
+
+    public String prettyPrintEdges() {
+    	String s = "[";
+    	if (edges.size() > 0) {
+    		boolean first = true;
+    		for (Entry<E, AdjacencyMapEdge<E>> entry : edges.entrySet())
+    			if (first) {
+    				first = false;
+    				s += entry.getValue();
+    			} else {
+    				s += ", " + entry.getValue();
+    			}
+    	}
+    	s += "]";
+		return s;
+    }
+
 }
