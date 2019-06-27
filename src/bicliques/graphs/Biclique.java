@@ -144,7 +144,7 @@ implements Comparable<Biclique<V, E>> {
 			result.retainAll(iter.next().getNeighbours());
 		return result;
 	}
-	
+
 	/**
 	 * Tests if biclique is absorbed by any biclique of a set of bicliques.<br>
 	 * A biclique is absorbed by another byclique if both partitions of vertices

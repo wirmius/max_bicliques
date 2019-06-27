@@ -94,11 +94,13 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 			txt += (numBicliques == 1 ? "1" : numBicliques);
 			txt += " maximal biclique";
 			txt += (numBicliques == 1 ? "" : "s");
-			txt += " computed\n\n";
-			if (numBicliques < 20)
-				txt += setOfMaxBicliques;
+			txt += " computed\n";
+			if (numBicliques < 30)
+				for (Biclique<String, Integer> bic : setOfMaxBicliques) {
+					txt += "\n" + bic;
+				}
 			else
-				txt += "(too many bicliques to show)";
+				txt += "\n(too many bicliques to show)";
 			txt += "\n";
 			txtOutput.setText(txt);
 			
@@ -651,13 +653,13 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 		txt += (numEdges == 1 ? "1 edge" : numEdges + " edges");
 		txt += "\n\n";
 		if (numVertices < 20) {
-			txt += graph.getVertices();
+			txt += graph.prettyPrintVertices();
 		} else {
 			txt += "(too many vertices to show)";
 		}
 		txt += "\n\n";
 		if (numEdges < 20) {
-			txt += graph.getEdges();
+			txt += graph.prettyPrintEdges();
 		} else {
 			txt += "(too many edges to show)";
 		}
