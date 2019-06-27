@@ -12,10 +12,40 @@ public class LEX<V extends Comparable<? super V>, E extends Comparable<? super E
     @Override
     public Set<Biclique<V, E>> findMaxBicliques(Graph<V, E> graph) {
         // get the initial set
-        Set<Biclique<V, E>> crea;
+        Set<Biclique<V, E>> initial_set = createInitialSet(graph);
 
         // iterate over the set
-        return null;
+        while (true) {
+            // create a set for the bicliques in the next generation
+            Set<Biclique<V, E>> intermediate1 = new TreeSet<>();
+            Set<Biclique<V, E>> intermediate2 = new TreeSet<>();
+
+
+            // go on to create all of consensus adjunctions
+            for(Biclique<V, E> bq: initial_set) {
+                // make a consensus adjunction with every other element of the set and dump
+                // it all to the new set
+                for(Biclique<V, E> target: initial_set) {
+                    intermediate1.addAll(bq.consensus(target));
+                }
+            }
+
+
+            // now go over the  set with the contains operation
+            for (Biclique<V, E> bq : intermediate1) {
+                if(!bq.isAbsorbedOf(intermediate2)) {
+                    // if it is not absorbed by anything in the new set,
+                    // add it to the other set
+                    intermediate2.add(bq);
+                }
+            }
+
+            // now compare the set to the original one
+            // if there is no difference, call it a day
+            if(initial_set.size()==intermediate2.size()) { return intermediate2; }
+            else { initial_set = intermediate2; }
+
+        }
     }
 
     public Set<Biclique<V, E>> createInitialSet(Graph<V, E> graph) {
