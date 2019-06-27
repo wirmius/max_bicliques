@@ -91,7 +91,7 @@ implements Comparable<Biclique<V, E>> {
 
 
 	/**
-	 * Constructs a biclique containing just the two vertexes. Usefull for constructing the initial biclique
+	 * Constructs a biclique containing just the two vertices. Usefull for constructing the initial biclique
 	 * set.
 	 * @param graph Related graph.
 	 * @param v1 One vertex.
@@ -231,7 +231,12 @@ implements Comparable<Biclique<V, E>> {
 	 * </ul>
 	 * @param vset0 First set of vertices.
 	 * @param vset1 Second set of vertices.
-	 * @return
+	 * @return Standard result of comparisons:
+	 * <ul>
+	 * <li> {@code X < Y <=> compare(X, Y) < 0}
+	 * <li> {@code X = Y <=> compare(X, Y) = 0}
+	 * <li> {@code X > Y <=> compare(X, Y) > 0}
+	 * </ul>
 	 */
 	private int compare(Set<Vertex<V>> vset0, Set<Vertex<V>> vset1) {
 		int cmp = vset0.size() - vset1.size();
