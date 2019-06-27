@@ -11,7 +11,10 @@ import java.util.TreeSet;
 public class LEX<V extends Comparable<? super V>, E extends Comparable<? super E>> implements MaximalBicliquesAlgorithm<V, E> {
     @Override
     public Set<Biclique<V, E>> findMaxBicliques(Graph<V, E> graph) {
+        // get the initial set
+        Set<Biclique<V, E>> crea;
 
+        // iterate over the set
         return null;
     }
 

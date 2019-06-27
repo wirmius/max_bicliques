@@ -5,6 +5,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+
+
 /**
  * Adapted from the Adjacency Graph by Alexander Baumgartner.
  * Adjacency Graph from the slides. Essentially everything is copypasted from the slides with minor modifications.
@@ -169,18 +171,24 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
         return this.edges.size();
     }
 
+    /**
+     * The function for adding the vertex. Can handle it if the vertex already exists.
+     * @param elem payload for the vertice
+     */
     @Override
     public void addVertex(V elem) {
-        assert this.vertices.get(elem) == null;
-        AdjacencyMapVertex<V> v = new AdjacencyMapVertex(elem);
-        this.vertices.put(elem, v);
+        if(this.vertices.get(elem) == null) {
+            AdjacencyMapVertex<V> v = new AdjacencyMapVertex(elem);
+            this.vertices.put(elem, v);
+        }
     }
 
     @Override
     public void addEdge(E edge, V v1, V v2) {
+        // can't handle changes of an edge
         assert this.edges.get(edge) == null;
-        assert this.vertices.get(v1) == null;
-        assert this.vertices.get(v2) == null; // replace with throws
+
+        //if(this.getEdges().get(edge)!=null) { this }
 
         this.addVertex(v1);
         this.addVertex(v2);
@@ -196,8 +204,7 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
 
     @Override
     public void addEdge(E edge, Vertex<V> v1, Vertex<V> v2) {
-        assert this.vertices.get(v1.getElem()) != null;
-        assert this.vertices.get(v2.getElem()) != null;
+        assert this.edges.get(edge) == null;
 
 
         AdjacencyMapEdge<E> e = new AdjacencyMapEdge(this.vertices.get(v1), this.vertices.get(v2), edge);
