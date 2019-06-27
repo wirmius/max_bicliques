@@ -4,6 +4,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.Map.Entry;
+
+import bicliques.graphs.Graph.Edge;
+import bicliques.graphs.Graph.Vertex;
 
 /**
  * Adapted from the Adjacency Graph by Alexander Baumgartner.
@@ -116,6 +120,7 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
             return elem.toString();
         }
 
+/*  	// original version
 		@Override
 		public Set<Vertex<V>> getNeighbours() {
 			Set<AdjacencyMapEdge<E>> sin = this.getIncomingEdges();
@@ -131,6 +136,23 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
 			
 			return vertret;
 		}
+
+*/
+        
+        // TODO - just a workaraound for not working getNeighbours() above        
+        @Override
+        public Set<Vertex<V>> getNeighbours() {
+        	Set<Vertex<V>> set = new TreeSet<>();
+    		for (Entry<E, AdjacencyMapEdge<E>> e : edges.entrySet()) {
+    			Vertex<V> start = e.getValue().getStart();
+    			Vertex<V> end = e.getValue().getEnd();
+    			if (elem.equals(start.getElem()))
+    				set.add(end);
+    			else if (elem.equals(end.getElem()))
+    				set.add(start);
+    		}
+        	return set;
+        }
 
         @Override
         public int compareTo(AdjacencyMapVertex<V> vAdjacencyMapVertex) {
@@ -208,4 +230,5 @@ public class AdjacencyMapGraph<V extends Comparable<? super V>, E extends Compar
 
         this.edges.put(edge, e);
     }
+    
 }
