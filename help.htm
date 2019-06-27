@@ -49,7 +49,7 @@
   <h3>Algorithm LEX</h3>
 
   The simplest algorithm in this series yet the most computationally demanding. The core of the algorithm are the two operations between
-  the biclique:
+  the bicliques:
   <ol><li>Absorption.</li><li>Consensus adjunction.</li></ol>
 
   By creating an initial list which is optimally a list of the bicliques based on the edges, we can iterate over the list and
@@ -58,12 +58,19 @@
   
   <h3>Algorithm MBEA </h3>
 
-  (TODO)
+  (not implemented yet)
   
   <h3>Modular Input Consensus Algorithm (MICA)</h3>
 
-  (TODO)
+  Some improvements leads to an incrementally polynomial consensus algorithm. It works on the vertices of a graph.
+  The algorithm has two steps (n is the number of vertices):
   
+  <ol>
+  <li><i>Start</i> with a list c0 of at most n maximal bicliques that covers the stars of the graph. Let c := c0.
+  <li><i>Repeat:</i> For every pair of distinct bicliques b1 from c0 and b2 from c, if b1 and b2 have a consensus b3 which is not absorbed by any member of c, then extend b3 to a maximal biclique b4, and add b4 to c.
+  </ol>
+  
+  Some substantial improvements are done in the implementation.
   <br>
   <br>
   <h2>User interface</h2>
