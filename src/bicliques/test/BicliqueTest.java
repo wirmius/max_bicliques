@@ -267,50 +267,6 @@ public class BicliqueTest {
 	}
 
 	/**
-	 * Test method for {@link bicliques.graphs.Biclique#gamma(java.util.Set)}.
-	 */
-	@SuppressWarnings("unchecked")
-	@Test
-	public final void testGammaVertex() {
-		// vertex set [2, 6]
-		Set<Vertex<String>> vset = new TreeSet<>();
-		vset.add(graph.getVertices().get("2"));
-		vset.add(graph.getVertices().get("6"));
-		
-		// just for access to gamma
-		Biclique<String, Integer> bic = new Biclique<>(graph, vset);
-		
-		// test
-		fail("Not yet implemented"); // TODO		
-		//assertEquals("", vset, bic.gamma((Set<Vertex<String>>) graph.getVertices().get("1")));		
-	}
-
-	/**
-	 * Test method for {@link bicliques.graphs.Biclique#gamma(java.util.Set)}.
-	 */
-	@Test
-	public final void testGammaVertices() {
-		// vertex set [2, 6]
-		Set<Vertex<String>> vset1 = new TreeSet<>();
-		vset1.add(graph.getVertices().get("2"));
-		vset1.add(graph.getVertices().get("6"));
-		
-		// vertex set [1, 3, 4, 5]
-		Set<Vertex<String>> vset2 = new TreeSet<>();
-		vset2.add(graph.getVertices().get("1"));
-		vset2.add(graph.getVertices().get("3"));
-		vset2.add(graph.getVertices().get("4"));
-		vset2.add(graph.getVertices().get("5"));
-		
-		// just for access to gamma
-		Biclique<String, Integer> bic = new Biclique<>(graph, vset1);
-		
-		// test
-		fail("Not yet implemented"); // TODO
-		//assertEquals("", vset2, bic.gamma(vset1));
-	}
-
-	/**
 	 * Test method for {@link bicliques.graphs.Biclique#isAbsorbedOf(java.util.Set)}.
 	 */
 	@Test
