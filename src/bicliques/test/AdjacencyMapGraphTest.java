@@ -1,4 +1,4 @@
-package test;
+package bicliques.test;
 
 import org.junit.After;
 import org.junit.Before;

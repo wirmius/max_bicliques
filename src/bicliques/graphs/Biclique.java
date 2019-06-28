@@ -56,8 +56,14 @@ implements Comparable<Biclique<V, E>> {
 		intersection.retainAll(right);
 		if (!intersection.isEmpty())
 			throw new IllegalArgumentException("Set of vertices are not disjoint.");
-		this.left = new TreeSet<>(left);
-		this.right = new TreeSet<>(right);
+		if (compare(left, right) <= 0) {
+			this.left = new TreeSet<>(left);
+			this.right = new TreeSet<>(right);			
+		} else {
+			this.left = new TreeSet<>(right);
+			this.right = new TreeSet<>(left);
+		}
+		this.graph = graph;
 	}
 	
 	/**
@@ -77,6 +83,7 @@ implements Comparable<Biclique<V, E>> {
 			left = second;
 			right = first;
 		}
+		this.graph = graph;
 	}
 	
 	/**
@@ -91,13 +98,13 @@ implements Comparable<Biclique<V, E>> {
 
 
 	/**
-	 * Constructs a biclique containing just the two vertices. Usefull for constructing the initial biclique
-	 * set.
+	 * Constructs a biclique containing just the two vertices.
+	 * Useful for constructing the initial biclique set.
 	 * @param graph Related graph.
 	 * @param v1 One vertex.
 	 * @param v2 The other vertex.
 	 */
-	public  Biclique(Graph<V, E> graph, Graph.Vertex<V> v1, Graph.Vertex<V> v2)
+	public  Biclique(Graph<V, E> graph, Vertex<V> v1, Vertex<V> v2)
 	{
 		this(graph, Collections.singleton(v1), Collections.singleton(v2));
 	}
@@ -127,7 +134,7 @@ implements Comparable<Biclique<V, E>> {
 	}
 	
 	/**
-	 * Computes the set of common neighbours some vertices.<br>
+	 * Computes the set of common neighbours of some vertices.<br>
 	 * <b>Note:</b> {@code (gamma(gamma(X)), gamma(X))} with some subset {@code X}
 	 * of vertices is a maximal biclique. 
 	 * @param vertices Set of vertices.
@@ -163,7 +170,7 @@ implements Comparable<Biclique<V, E>> {
 	}
 	
 	/**
-	 * Computes the consensus of two bicliques.<p>
+	 * Computes the (extended) consensus of two bicliques.<p>
 	 * From two bicliques {@code (X1, Y1)} and {@code (X2, Y2)} the consensus consists of
 	 * the following bicliques (non empty intersection provided):
 	 * <ul>
@@ -172,6 +179,7 @@ implements Comparable<Biclique<V, E>> {
 	 * <li>{@code (Y1 intersection X2, X1 union Y2)},
 	 * <li>{@code (Y1 intersection Y2, X1 union X2)}.
 	 * </ul>
+	 * Additionally, each element of the consensus set is extended to a maximal biclique.<p>
 	 * @param other The other biclique.
 	 * @return Consensus set of (0 to 4) maximal bicliques.
 	 */
@@ -208,17 +216,32 @@ implements Comparable<Biclique<V, E>> {
 	}
 	
 	/**
-	 * Extends biclique to a maximal biclique.
+	 * Extends biclique to a maximal biclique using left as generating set.
 	 * (Could be done directly by creating a maximal biclique with a generation set.)
 	 * @return Maximal biclique.
 	 */
-	public Biclique<V, E> extendToMaximal() {
+	public Biclique<V, E> extendToMaximalFromLeft() {
 		return new Biclique<>(graph, gamma(left));
+	}
+	
+	/**
+	 * Extends biclique to a maximal biclique using right as generating set.
+	 * (Could be done directly by creating a maximal biclique with a generation set.)
+	 * @return Maximal biclique.
+	 */
+	public Biclique<V, E> extendToMaximalFromRight() {
+		return new Biclique<>(graph, gamma(right));
 	}
 	
 	@Override
 	public String toString() {
 		return "(" + left + ", " + right + ")";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean equals(Object other) {
+		return this.compareTo((Biclique<V, E>) other) == 0;
 	}
 	
 	/**
