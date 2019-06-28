@@ -32,8 +32,12 @@ public class MICA<V extends Comparable<? super V>, E extends Comparable<? super 
 	
 	@Override
 	public Set<Biclique<V, E>> findMaxBicliques(Graph<V, E> graph) {
-				
-		// empty graph?
+		
+		// no graph
+		if (graph == null)
+			throw new NullPointerException("No graph provided.");
+		
+		// empty graph
 		if (graph.getVertices().size() == 0)
 			return Collections.emptySet();
 		
