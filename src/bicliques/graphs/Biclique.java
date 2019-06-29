@@ -51,7 +51,7 @@ implements Comparable<Biclique<V, E>> {
 	 * @param graph Related graph.
 	 * @param left One partition of vertices of the two.
 	 */
-	public Biclique(Graph<V, E> graph, Set<Vertex<V>> left, Set<Vertex<V>> right) {
+	public Biclique(Graph<V, E> graph, Set<? extends Vertex<V>> left, Set<? extends Vertex<V>> right) {
 		Set<Vertex<V>> intersection = new TreeSet<>(left);
 		intersection.retainAll(right);
 		if (!intersection.isEmpty())
@@ -73,7 +73,7 @@ implements Comparable<Biclique<V, E>> {
 	 * @param graph Related graph.
 	 * @param vertices Generating set of vertices.
 	 */
-	public Biclique(Graph<V, E> graph, Set<Vertex<V>> vertices) {
+	public Biclique(Graph<V, E> graph, Set<? extends Vertex<V>> vertices) {
 		Set<Vertex<V>> first = new TreeSet<>(gamma(vertices));
 		Set<Vertex<V>> second = new TreeSet<>(gamma(first));
 		if (compare(first, second) <= 0) {
@@ -92,7 +92,7 @@ implements Comparable<Biclique<V, E>> {
 	 * @param graph Related graph.
 	 * @param vertex Only vertex in one partition of vertices. 
 	 */
-	public Biclique(Graph<V, E> graph, Graph.Vertex<V> vertex) {
+	public Biclique(Graph<V, E> graph, Vertex<V> vertex) {
 		this(graph, Collections.singleton(vertex));
 	}
 
@@ -139,14 +139,14 @@ implements Comparable<Biclique<V, E>> {
 	 * of vertices is a maximal biclique. 
 	 * @param vertices Set of vertices.
 	 * @return Set of common neighbours of vertices.
-	 */
-	public Set<Vertex<V>> gamma(Set<Vertex<V>> vertices) {
+	 */	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static Set<? extends Vertex> gamma(Set<? extends Vertex> vertices) {
 		if (vertices.isEmpty())
 			return Collections.emptySet();
-		Iterator<Vertex<V>> iter = vertices.iterator();
-		Vertex<V> vertex = iter.next();
-		@SuppressWarnings("unchecked")
-		Set<Vertex<V>> result = (Set<Vertex<V>>) vertex.getNeighbours();
+		Iterator<? extends Vertex> iter = vertices.iterator();
+		Vertex vertex = iter.next();
+		Set<? extends Vertex> result = vertex.getNeighbours();
 		while (iter.hasNext())
 			result.retainAll(iter.next().getNeighbours());
 		return result;
@@ -170,7 +170,65 @@ implements Comparable<Biclique<V, E>> {
 	}
 	
 	/**
-	 * Computes the (extended) consensus of two bicliques.<p>
+	 * Computes the consensus of two bicliques.<p>
+	 * From two bicliques {@code (X1, Y1)} and {@code (X2, Y2)} the consensus consists of
+	 * the following bicliques (non empty intersection provided):
+	 * <ul>
+	 * <li>{@code (X1 intersection X2, Y1 union Y2)},
+	 * <li>{@code (X1 intersection Y2, Y1 union X2)},
+	 * <li>{@code (Y1 intersection X2, X1 union Y2)},
+	 * <li>{@code (Y1 intersection Y2, X1 union X2)}.
+	 * </ul>
+	 * @param other The other biclique.
+	 * @return Consensus set of (0 to 4) maximal bicliques.
+	 */
+ 	public Set<Biclique<V, E>> consensus(Biclique<V, E> other) {
+ 
+		Set<Biclique<V, E>> cons = new TreeSet<>();
+		Set<Vertex<V>> x;
+		Set<Vertex<V>> y;
+		
+		// X1 intersection X2, Y1 union Y2
+		x = new TreeSet<>(this.getLeft());
+		x.retainAll(other.getLeft());
+		if (!x.isEmpty()) {
+			y = new TreeSet<>(this.getRight());
+			y.addAll(other.getRight());
+			cons.add(new Biclique<V, E>(graph, x, y));
+		}
+		
+		// X1 intersection Y2, Y1 union X2
+		x = new TreeSet<>(this.getLeft());
+		x.retainAll(other.getRight());
+		if (!x.isEmpty()) {
+			y = new TreeSet<>(this.getRight());
+			y.addAll(other.getLeft());
+			cons.add(new Biclique<V, E>(graph, x, y));
+		}
+		
+		// Y1 intersection X2, X1 union Y2
+		x = new TreeSet<>(this.getRight());
+		x.retainAll(other.getLeft());
+		if (!x.isEmpty()) {
+			y = new TreeSet<>(this.getLeft());
+			y.addAll(other.getRight());
+			cons.add(new Biclique<V, E>(graph, x, y));
+		}
+		
+		// Y1 intersection Y2, X1 union X2
+		x = new TreeSet<>(this.getRight());
+		x.retainAll(other.getRight());
+		if (!x.isEmpty()) {
+			y = new TreeSet<>(this.getLeft());
+			y.addAll(other.getLeft());
+			cons.add(new Biclique<V, E>(graph, x, y));
+		}
+		
+		return cons;
+	}
+	
+	/**
+	 * Computes the extended consensus of two bicliques.<p>
 	 * From two bicliques {@code (X1, Y1)} and {@code (X2, Y2)} the consensus consists of
 	 * the following bicliques (non empty intersection provided):
 	 * <ul>
@@ -183,7 +241,7 @@ implements Comparable<Biclique<V, E>> {
 	 * @param other The other biclique.
 	 * @return Consensus set of (0 to 4) maximal bicliques.
 	 */
- 	public Set<Biclique<V, E>> consensus(Biclique<V, E> other) {
+ 	public Set<Biclique<V, E>> extendedConsensus(Biclique<V, E> other) {
  
 		Set<Biclique<V, E>> cons = new TreeSet<>();
 		Set<Vertex<V>> x;
@@ -221,7 +279,8 @@ implements Comparable<Biclique<V, E>> {
 	 * @return Maximal biclique.
 	 */
 	public Biclique<V, E> extendToMaximalFromLeft() {
-		return new Biclique<>(graph, gamma(left));
+		Set<Vertex<V>> vset = new TreeSet<>(gamma(left));
+		return new Biclique<>(graph, vset);
 	}
 	
 	/**
@@ -230,7 +289,8 @@ implements Comparable<Biclique<V, E>> {
 	 * @return Maximal biclique.
 	 */
 	public Biclique<V, E> extendToMaximalFromRight() {
-		return new Biclique<>(graph, gamma(right));
+		Set<Vertex<V>> vset = new TreeSet<>(gamma(right));
+		return new Biclique<>(graph, vset);
 	}
 	
 	@Override
@@ -252,8 +312,8 @@ implements Comparable<Biclique<V, E>> {
 	 * <li>if size is equal, compare elementwise in ascending order,
 	 * first difference is returned.
 	 * </ul>
-	 * @param vset0 First set of vertices.
-	 * @param vset1 Second set of vertices.
+	 * @param left2 First set of vertices.
+	 * @param right2 Second set of vertices.
 	 * @return Standard result of comparisons:
 	 * <ul>
 	 * <li> {@code X < Y <=> compare(X, Y) < 0}
@@ -261,12 +321,12 @@ implements Comparable<Biclique<V, E>> {
 	 * <li> {@code X > Y <=> compare(X, Y) > 0}
 	 * </ul>
 	 */
-	private int compare(Set<Vertex<V>> vset0, Set<Vertex<V>> vset1) {
-		int cmp = vset0.size() - vset1.size();
+	private int compare(Set<? extends Vertex<V>> left2, Set<? extends Vertex<V>> right2) {
+		int cmp = left2.size() - right2.size();
 		if (cmp != 0)
 			return cmp;
-		Iterator<Vertex<V>> iter1 = vset1.iterator();
-		for (Vertex<V> v0 : vset0) {
+		Iterator<? extends Vertex<V>> iter1 = right2.iterator();
+		for (Vertex<V> v0 : left2) {
 			Vertex<V> v1 = iter1.next();
 			cmp = v0.getElem().compareTo(v1.getElem());
 			if (cmp != 0)
