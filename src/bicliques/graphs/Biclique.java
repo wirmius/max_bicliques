@@ -51,7 +51,7 @@ implements Comparable<Biclique<V, E>> {
 	 * @param graph Related graph.
 	 * @param left One partition of vertices of the two.
 	 */
-	public Biclique(Graph<V, E> graph, Set<Vertex<V>> left, Set<Vertex<V>> right) {
+	public Biclique(Graph<V, E> graph, Set<? extends Vertex<V>> left, Set<? extends Vertex<V>> right) {
 		Set<Vertex<V>> intersection = new TreeSet<>(left);
 		intersection.retainAll(right);
 		if (!intersection.isEmpty())
@@ -73,7 +73,7 @@ implements Comparable<Biclique<V, E>> {
 	 * @param graph Related graph.
 	 * @param vertices Generating set of vertices.
 	 */
-	public Biclique(Graph<V, E> graph, Set<Vertex<V>> vertices) {
+	public Biclique(Graph<V, E> graph, Set<? extends Vertex<V>> vertices) {
 		Set<Vertex<V>> first = new TreeSet<>(gamma(vertices));
 		Set<Vertex<V>> second = new TreeSet<>(gamma(first));
 		if (compare(first, second) <= 0) {
@@ -92,7 +92,7 @@ implements Comparable<Biclique<V, E>> {
 	 * @param graph Related graph.
 	 * @param vertex Only vertex in one partition of vertices. 
 	 */
-	public Biclique(Graph<V, E> graph, Graph.Vertex<V> vertex) {
+	public Biclique(Graph<V, E> graph, Vertex<V> vertex) {
 		this(graph, Collections.singleton(vertex));
 	}
 
@@ -140,13 +140,12 @@ implements Comparable<Biclique<V, E>> {
 	 * @param vertices Set of vertices.
 	 * @return Set of common neighbours of vertices.
 	 */
-	public Set<Vertex<V>> gamma(Set<Vertex<V>> vertices) {
+	public Set<? extends Vertex<V>> gamma(Set<? extends Vertex<V>> vertices) {
 		if (vertices.isEmpty())
 			return Collections.emptySet();
-		Iterator<Vertex<V>> iter = vertices.iterator();
+		Iterator<? extends Vertex<V>> iter = vertices.iterator();
 		Vertex<V> vertex = iter.next();
-		@SuppressWarnings("unchecked")
-		Set<Vertex<V>> result = (Set<Vertex<V>>) vertex.getNeighbours();
+		Set<? extends Vertex<V>> result = vertex.getNeighbours();
 		while (iter.hasNext())
 			result.retainAll(iter.next().getNeighbours());
 		return result;
@@ -252,8 +251,8 @@ implements Comparable<Biclique<V, E>> {
 	 * <li>if size is equal, compare elementwise in ascending order,
 	 * first difference is returned.
 	 * </ul>
-	 * @param vset0 First set of vertices.
-	 * @param vset1 Second set of vertices.
+	 * @param left2 First set of vertices.
+	 * @param right2 Second set of vertices.
 	 * @return Standard result of comparisons:
 	 * <ul>
 	 * <li> {@code X < Y <=> compare(X, Y) < 0}
@@ -261,12 +260,12 @@ implements Comparable<Biclique<V, E>> {
 	 * <li> {@code X > Y <=> compare(X, Y) > 0}
 	 * </ul>
 	 */
-	private int compare(Set<Vertex<V>> vset0, Set<Vertex<V>> vset1) {
-		int cmp = vset0.size() - vset1.size();
+	private int compare(Set<? extends Vertex<V>> left2, Set<? extends Vertex<V>> right2) {
+		int cmp = left2.size() - right2.size();
 		if (cmp != 0)
 			return cmp;
-		Iterator<Vertex<V>> iter1 = vset1.iterator();
-		for (Vertex<V> v0 : vset0) {
+		Iterator<? extends Vertex<V>> iter1 = right2.iterator();
+		for (Vertex<V> v0 : left2) {
 			Vertex<V> v1 = iter1.next();
 			cmp = v0.getElem().compareTo(v1.getElem());
 			if (cmp != 0)
