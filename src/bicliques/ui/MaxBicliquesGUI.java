@@ -550,45 +550,40 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 	    
 		try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
 			
-		    String firstLine;
-		    String secondLine;
+		    String oldLine = null;
+		    String newLine = null;
+		    boolean edgeComplete = true;
 		    
-		    outer: while ((firstLine = reader.readLine()) != null) {
+		    outer: while ((newLine = reader.readLine()) != null) {
 		    	
-		    	// skip empty first line
-				firstLine = firstLine.trim();
-		    	while (firstLine.equals("")) {
-					firstLine = reader.readLine();
-					if (firstLine == null)
+		    	// skip empty line
+				newLine = newLine.trim();
+		    	while (newLine.equals("")) {
+					newLine = reader.readLine();
+					if (newLine == null)
 						break outer;
-					firstLine = firstLine.trim();
+					newLine = newLine.trim();
 		    	}
 		    	
-		    	// read second line
-		    	if ((secondLine = reader.readLine()) == null) {
-					JOptionPane.showMessageDialog(frame,
-							"Remaining single vertex in data.",
-							"Graph could not be loaded",
-							JOptionPane.ERROR_MESSAGE);
-		    		return null;
-		    	}
+		    	edgeComplete = !edgeComplete;
 		    	
-		    	// skip empty second line
-		    	secondLine = secondLine.trim();
-		    	while (secondLine.equals("")) {
-		    		secondLine = reader.readLine();
-					if (secondLine == null)
-						break outer;
-					secondLine = secondLine.trim();
-		    	}
-		    	
-		    	// add edge to graph
-		    	graph.addEdge(edgeNumber++, firstLine, secondLine);
+		    	if (edgeComplete)
+		    		graph.addEdge(edgeNumber++, oldLine, newLine);
+		    	else
+		    		oldLine = newLine;
 			}
+		    
+		    // single vertex remaining?
+			if (!edgeComplete)
+				if (JOptionPane.showConfirmDialog(frame,
+						"Single vertex remaining, should it be skipped?",
+						"Graph data incomplete",
+						JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION)
+					return null;
 			
 		} catch (FileNotFoundException e) {
 			JOptionPane.showMessageDialog(frame,
-					"File" + file.getName() + "not found.",
+					"File " + file.getName() + " not found.",
 					"Graph could not be loaded",
 					JOptionPane.ERROR_MESSAGE);
     		return null;
