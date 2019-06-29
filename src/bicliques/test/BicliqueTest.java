@@ -5,6 +5,7 @@ package bicliques.test;
 
 import static org.junit.Assert.*;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -14,7 +15,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import bicliques.algorithms.MICA;
 import bicliques.algorithms.MaximalBicliquesAlgorithm;
 import bicliques.graphs.Biclique;
 import bicliques.graphs.Graph;
@@ -29,9 +29,6 @@ import bicliques.graphs.GraphVendingMachine;
 public class BicliqueTest {
 
 	private static Graph<String, Integer> graph;
-	private MaximalBicliquesAlgorithm<String, Integer> mba;
-	private static Set<Biclique<String, Integer>> bicSet;
-	
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -64,7 +61,7 @@ public class BicliqueTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		bicSet = new TreeSet<>();
+		new TreeSet<>();
 	}
 
 	/**
@@ -116,7 +113,7 @@ public class BicliqueTest {
 
 		// no biclique is created from sets [4, 5] and [4, 6] but
 		// IllegalArgumentException is thrown because of non disjoint sets
-		Biclique<String, Integer> bic = new Biclique<>(graph, vset1, vset2);
+		new Biclique<>(graph, vset1, vset2);
 	}
 
 	/**
@@ -267,6 +264,40 @@ public class BicliqueTest {
 	}
 
 	/**
+	 * Test method for {@link bicliques.graphs.Biclique#gamma(java.util.Set)}.
+	 */
+	@Test
+	public final void testGammaVertex() {
+		// vertex set [2, 4]
+		Set<Vertex<String>> expectedNeighbours = new TreeSet<>();
+		expectedNeighbours.add(graph.getVertices().get("2"));
+		expectedNeighbours.add(graph.getVertices().get("4"));
+		
+		// test
+		assertEquals(expectedNeighbours,
+				Biclique.gamma(Collections.singleton(graph.getVertices().get("1"))));
+	}
+
+	/**
+	 * Test method for {@link bicliques.graphs.Biclique#gamma(java.util.Set)}.
+	 */
+	@Test
+	public final void testGammaVertices() {
+		// vertex set [2, 4]
+		Set<Vertex<String>> expectedNeighbours = new TreeSet<>();
+		expectedNeighbours.add(graph.getVertices().get("3"));
+		expectedNeighbours.add(graph.getVertices().get("4"));
+		
+		// vertex set [2, 4]
+		Set<Vertex<String>> vset = new TreeSet<>();
+		vset.add(graph.getVertices().get("2"));
+		vset.add(graph.getVertices().get("5"));
+		
+		// test
+		assertEquals(expectedNeighbours, Biclique.gamma(vset));		
+	}
+
+	/**
 	 * Test method for {@link bicliques.graphs.Biclique#isAbsorbedOf(java.util.Set)}.
 	 */
 	@Test
@@ -323,35 +354,59 @@ public class BicliqueTest {
 	}
 
 	/**
-	 * Test method for {@link bicliques.graphs.Biclique#consensus(bicliques.graphs.Biclique)}.
+	 * Test method for {@link bicliques.graphs.Biclique#extendedConsensus(bicliques.graphs.Biclique)}.
 	 */
 	@Test
 	public final void testConsensus() {
-		// vertex set [3, 4]
-		Set<Vertex<String>> left = new TreeSet<>();
-		left.add(graph.getVertices().get("3"));
-		left.add(graph.getVertices().get("4"));
+		// vertex set [4]
+		Set<Vertex<String>> vset4 = new TreeSet<>();
+		vset4.add(graph.getVertices().get("4"));
 		
-		// vertex set [2, 5, 7]
-		Set<Vertex<String>> right = new TreeSet<>();
-		right.add(graph.getVertices().get("2"));
-		right.add(graph.getVertices().get("5"));
-		right.add(graph.getVertices().get("7"));
+		// vertex set [1, 2, 3]
+		Set<Vertex<String>> vset123 = new TreeSet<>();
+		vset123.add(graph.getVertices().get("1"));
+		vset123.add(graph.getVertices().get("2"));
+		vset123.add(graph.getVertices().get("3"));
 		
-		// biclique ([3, 4], [2, 5, 7]) created from sets [3, 4] and [2, 5, 7]
-		Biclique<String, Integer> bic34_257 = new Biclique<>(graph, left, right);
+		// biclique ([4], [1, 2, 3]) created from sets vset4 and vset123
+		Biclique<String, Integer> bic4_123 = new Biclique<>(graph, vset4, vset123);
+		
+		// biclique ([1, 3], [2, 4]) generated from vertex 1
+		Biclique<String, Integer> bic13_24 = new Biclique<>(graph, graph.getVertices().get("1"));
 		
 		// biclique ([2], [1, 3, 4]) generated from vertex 2
 		Biclique<String, Integer> bic2_134 = new Biclique<>(graph, graph.getVertices().get("2"));
 		
-		// biclique ([5, 7], [3, 4, 6]) generated from vertex 5
-		Biclique<String, Integer> bic57_346 = new Biclique<>(graph, graph.getVertices().get("5"));
+		// consensus
+		Set<Biclique<String, Integer>> cons = new TreeSet<>();
+		cons.add(bic2_134);
+		cons.add(bic13_24);
+		cons.add(bic4_123);
+		
+		assertEquals(cons, bic13_24.consensus(bic2_134));
+	}
+
+	/**
+	 * Test method for {@link bicliques.graphs.Biclique#extendedConsensus(bicliques.graphs.Biclique)}.
+	 */
+	@Test
+	public final void testExtendedConsensus() {
+		// biclique ([1, 3], [2, 4]) generated from vertex 1
+		Biclique<String, Integer> bic13_24 = new Biclique<>(graph, graph.getVertices().get("1"));
+		
+		// biclique ([2], [1, 3, 4]) generated from vertex 2
+		Biclique<String, Integer> bic2_134 = new Biclique<>(graph, graph.getVertices().get("2"));
+		
+		// biclique ([4], [1, 2, 3, 5, 7]) generated from vertex 4
+		Biclique<String, Integer> bic4_12357 = new Biclique<>(graph, graph.getVertices().get("4"));
 		
 		// consensus
 		Set<Biclique<String, Integer>> cons = new TreeSet<>();
-		cons.add(bic34_257);
+		cons.add(bic2_134);
+		cons.add(bic13_24);
+		cons.add(bic4_12357);
 		
-		assertEquals(cons, bic2_134.consensus(bic57_346));
+		assertEquals(cons, bic13_24.extendedConsensus(bic2_134));
 	}
 
 	/**

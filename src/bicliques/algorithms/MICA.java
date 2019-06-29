@@ -72,7 +72,7 @@ public class MICA<V extends Comparable<? super V>, E extends Comparable<? super 
 					if (!bic.equals(starExtended)) {
 						// compute set of extended consensuses and add them to n0
 						// if they are not absorbed by bicliques in c or n0
-						Set<Biclique<V, E>> cons = bic.consensus(starExtended);
+						Set<Biclique<V, E>> cons = bic.extendedConsensus(starExtended);
 						for (Biclique<V, E> con : cons)
 							if (!con.isAbsorbedOf(c) && !con.isAbsorbedOf(n0))
 								n0.add(con);

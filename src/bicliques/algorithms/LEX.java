@@ -26,7 +26,7 @@ public class LEX<V extends Comparable<? super V>, E extends Comparable<? super E
                 // make a consensus adjunction with every other element of the set and dump
                 // it all to the new set
                 for(Biclique<V, E> target: initial_set) {
-                    intermediate1.addAll(bq.consensus(target));
+                    intermediate1.addAll(bq.extendedConsensus(target));
                 }
             }
 
