@@ -268,6 +268,8 @@ public class BicliqueTest {
 	 */
 	@Test
 	public final void testGammaVertex() {
+		Biclique<String, Integer> bic = new Biclique<>(graph, graph.getVertices().get("1"));
+		
 		// vertex set [2, 4]
 		Set<Vertex<String>> expectedNeighbours = new TreeSet<>();
 		expectedNeighbours.add(graph.getVertices().get("2"));
@@ -275,7 +277,7 @@ public class BicliqueTest {
 		
 		// test
 		assertEquals(expectedNeighbours,
-				Biclique.gamma(Collections.singleton(graph.getVertices().get("1"))));
+				bic.gamma(Collections.singleton(graph.getVertices().get("1"))));
 	}
 
 	/**
@@ -283,6 +285,8 @@ public class BicliqueTest {
 	 */
 	@Test
 	public final void testGammaVertices() {
+		Biclique<String, Integer> bic = new Biclique<>(graph, graph.getVertices().get("1"));
+		
 		// vertex set [2, 4]
 		Set<Vertex<String>> expectedNeighbours = new TreeSet<>();
 		expectedNeighbours.add(graph.getVertices().get("3"));
@@ -294,7 +298,7 @@ public class BicliqueTest {
 		vset.add(graph.getVertices().get("5"));
 		
 		// test
-		assertEquals(expectedNeighbours, Biclique.gamma(vset));		
+		assertEquals(expectedNeighbours, bic.gamma(vset));		
 	}
 
 	/**

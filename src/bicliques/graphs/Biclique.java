@@ -140,13 +140,12 @@ implements Comparable<Biclique<V, E>> {
 	 * @param vertices Set of vertices.
 	 * @return Set of common neighbours of vertices.
 	 */	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static Set<? extends Vertex> gamma(Set<? extends Vertex> vertices) {
+	public Set<? extends Vertex<V>> gamma(Set<? extends Vertex<V>> vertices) {
 		if (vertices.isEmpty())
 			return Collections.emptySet();
-		Iterator<? extends Vertex> iter = vertices.iterator();
-		Vertex vertex = iter.next();
-		Set<? extends Vertex> result = vertex.getNeighbours();
+		Iterator<? extends Vertex<V>> iter = vertices.iterator();
+		Vertex<V> vertex = iter.next();
+		Set<? extends Vertex<V>> result = vertex.getNeighbours();
 		while (iter.hasNext())
 			result.retainAll(iter.next().getNeighbours());
 		return result;
