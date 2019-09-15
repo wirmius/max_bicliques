@@ -25,14 +25,20 @@ import bicliques.graphs.GraphVendingMachine;
 /**
  * Test class for MICA algorithm.
  * @author Roland Koppenberger
- * @version 1.0, June 28th 2019.
+ * @version 1.1, September 15th 2019.
  */
 public class MICATest {
 
+	private class DummyThread extends Thread {
+		public void run() {}
+	}
+	
 	private Graph<String, Integer> graph;
 	private MaximalBicliquesAlgorithm<String, Integer> mba;
 	private Set<Biclique<String, Integer>> bicSet;
 	
+	private DummyThread dummy;
+
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -109,7 +115,8 @@ public class MICATest {
 		vset.add(graph.getVertices().get("7"));
 		bicSet.add(new Biclique<>(graph, vset));
 		
-		assertEquals("example failed", bicSet, mba.findMaxBicliques(graph));
+		dummy = new DummyThread();
+		assertEquals("example failed", bicSet, mba.findMaxBicliques(graph, dummy));
 	}
 
 	/**
@@ -117,7 +124,8 @@ public class MICATest {
 	 */
 	@Test
 	public final void testFindMaxBicliquesEmptyGraph() {
-		assertEquals("empty graph provided", Collections.emptySet(), mba.findMaxBicliques(graph));
+		dummy = new DummyThread();
+		assertEquals("empty graph provided", Collections.emptySet(), mba.findMaxBicliques(graph, dummy));
 	}
 
 	/**
@@ -125,7 +133,8 @@ public class MICATest {
 	 */
 	@Test(expected=NullPointerException.class)
 	public final void testFindMaxBicliquesNoGraph() {
-		bicSet = mba.findMaxBicliques(null);
+		dummy = new DummyThread();
+		bicSet = mba.findMaxBicliques(null, dummy);
 	}
 
 }
