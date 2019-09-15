@@ -26,12 +26,12 @@ import bicliques.graphs.Graph.Vertex;
  * Pages 11-21.</a>
  * 
  * @author Roland Koppenberger
- * @version 1.0, June 24th 2019.
+ * @version 1.1, September 15th 2019.
  */
 public class MICA<V extends Comparable<? super V>, E extends Comparable<? super E>> implements MaximalBicliquesAlgorithm<V, E> {
 	
 	@Override
-	public Set<Biclique<V, E>> findMaxBicliques(Graph<V, E> graph) {
+	public Set<Biclique<V, E>> findMaxBicliques(Graph<V, E> graph, Thread computation) {
 		
 		// no graph
 		if (graph == null)
@@ -49,15 +49,23 @@ public class MICA<V extends Comparable<? super V>, E extends Comparable<? super 
 			Biclique<V, E> starExtended = new Biclique<>(graph, entry.getValue());
 			if (!starExtended.isAbsorbedOf(c0))
 				c0.add(starExtended);
+			if (computation.isInterrupted())
+				return null;
 		}
 		
 		// c collects max. bicliques
 		Set<Biclique<V, E>> c = new TreeSet<>();
 		c.addAll(c0);
 		
+		if (computation.isInterrupted())
+			return null;
+		
 		// w0 is actual working set (= new ones in last stage)
 		Set<Biclique<V, E>> w0 = new TreeSet<>();
 		w0.addAll(c0);
+		
+		if (computation.isInterrupted())
+			return null;
 		
 		// n0 collects new max. bicliques in actual stage
 		Set<Biclique<V, E>> n0;
@@ -68,7 +76,11 @@ public class MICA<V extends Comparable<? super V>, E extends Comparable<? super 
 			// for every two bicliques,
 			// one from working set w0, and one from extended stars set c0
 			for (Biclique<V, E> bic : w0)
-				for (Biclique<V, E> starExtended : c0)
+				for (Biclique<V, E> starExtended : c0) {
+					
+					if (computation.isInterrupted())
+						return null;					
+					
 					if (!bic.equals(starExtended)) {
 						// compute set of extended consensuses and add them to n0
 						// if they are not absorbed by bicliques in c or n0
@@ -77,13 +89,23 @@ public class MICA<V extends Comparable<? super V>, E extends Comparable<? super 
 							if (!con.isAbsorbedOf(c) && !con.isAbsorbedOf(n0))
 								n0.add(con);
 					}
+				}
+			
+			if (computation.isInterrupted())
+				return null;
 			
 			// next working set consists of newly found maximal bicliques
 			w0 = new TreeSet<>();
 			w0.addAll(n0);
 			
+			if (computation.isInterrupted())
+				return null;
+			
 			// add newly found max. bicliques
 			c.addAll(n0);
+			
+			if (computation.isInterrupted())
+				return null;
 			
 			// repeat while new bicliques have been found
 		} while (!n0.isEmpty());

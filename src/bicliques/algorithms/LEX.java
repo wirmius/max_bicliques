@@ -10,29 +10,40 @@ import java.util.TreeSet;
 
 public class LEX<V extends Comparable<? super V>, E extends Comparable<? super E>> implements MaximalBicliquesAlgorithm<V, E> {
     @Override
-    public Set<Biclique<V, E>> findMaxBicliques(Graph<V, E> graph) {
+    public Set<Biclique<V, E>> findMaxBicliques(Graph<V, E> graph, Thread computation) {
         // get the initial set
         Set<Biclique<V, E>> initial_set = createInitialSet(graph);
 
+		if (computation.isInterrupted())
+			return null;
+		
         // iterate over the set
         while (true) {
             // create a set for the bicliques in the next generation
             Set<Biclique<V, E>> intermediate1 = new TreeSet<>();
             Set<Biclique<V, E>> intermediate2 = new TreeSet<>();
 
-
+    		if (computation.isInterrupted())
+    			return null;
+    		
             // go on to create all of consensus adjunctions
             for(Biclique<V, E> bq: initial_set) {
                 // make a consensus adjunction with every other element of the set and dump
                 // it all to the new set
                 for(Biclique<V, E> target: initial_set) {
                     intermediate1.addAll(bq.extendedConsensus(target));
+                    
+            		if (computation.isInterrupted())
+            			return null;            		
                 }
             }
 
-
             // now go over the  set with the contains operation
             for (Biclique<V, E> bq : intermediate1) {
+            	
+        		if (computation.isInterrupted())
+        			return null;
+        		
                 if(!bq.isAbsorbedOf(intermediate2)) {
                     // if it is not absorbed by anything in the new set,
                     // add it to the other set

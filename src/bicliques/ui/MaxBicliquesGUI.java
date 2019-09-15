@@ -52,7 +52,7 @@ import bicliques.graphs.Graph.Vertex;
 /**
  * GUI for computing the set of maximal bicliques of a graph.
  * @author Roland Koppenberger
- * @version 1.0, June 24th 2019.
+ * @version 1.1, September 15th 2019.
  */
 public class MaxBicliquesGUI implements Runnable, ActionListener {
 
@@ -77,14 +77,15 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 				setGUIafterComputationFailed("(no algorithm object for computation)");
 				return;
 			}
-			setOfMaxBicliques = mba.findMaxBicliques(graph);
+			
+			setOfMaxBicliques = mba.findMaxBicliques(graph, this);
+			if (isInterrupted())
+				return;
 			if (setOfMaxBicliques == null) {
 				setGUIafterComputationFailed(LBL_NOT_COMPUTED);
 				return;
 			}
 			
-			if (isInterrupted())
-				return;
 			btnCompute.setEnabled(false);
 			isComputing = false;
 			
@@ -495,7 +496,7 @@ public class MaxBicliquesGUI implements Runnable, ActionListener {
 			
 		case ACT_MENU_HELP_ABOUT:
 			JOptionPane.showMessageDialog(frame,
-				"Version 1.0, June 2019\n"
+				"Version 1.1, September 2019\n"
 				+ "Mykyta Ielanskyi\n"
 				+ "Roland Koppenberger\n"
 				+ "Hadi Sanaei",

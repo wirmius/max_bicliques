@@ -11,7 +11,7 @@ import bicliques.graphs.Graph;
 /**
  * Interface for all algorithms computing the set of maximal bicliques of a graph.
  * @author Roland Koppenberger
- * @version 1.0, June 24th 2019.
+ * @version 1.1, September 15th 2019.
  */
 public interface MaximalBicliquesAlgorithm<V extends Comparable<? super V>, E extends Comparable<? super E>> {
 
@@ -20,5 +20,5 @@ public interface MaximalBicliquesAlgorithm<V extends Comparable<? super V>, E ex
 	 * @param graph Graph to examine.
 	 * @return Set of maximal bicliques of graph.
 	 */
-	Set<Biclique<V, E>> findMaxBicliques(Graph<V, E> graph);
+	Set<Biclique<V, E>> findMaxBicliques(Graph<V, E> graph, Thread computation);
 }
